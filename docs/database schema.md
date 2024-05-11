@@ -31,11 +31,10 @@
 - `type`: "Indoor" | "Outdoor"
 - `createdAt`: (Optional) Date
 - `updatedAt`: (Optional) Date
-- `price`: object
-  - `perHour`: number
-  - `perDay`: number
-  - `perWeek`: number
-  - `perMonth`: number
+- `perHour`: number
+- `perDay`: number
+- `perWeek`: number
+- `perMonth`: number
   - `perPerson`: number
 
 ## Event Table
