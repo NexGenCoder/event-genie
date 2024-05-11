@@ -1,8 +1,166 @@
 import express from 'express'
-import { IUser } from 'types/user'
+import { IUser, IOtp } from 'types/user'
 
 import passport from '../services/passport'
 import { generateJWT } from '../utils/auth'
+import {
+   addOtpModel,
+   addUserModel,
+   getOtpByMobileNumberModel,
+   verifyOtpModel,
+   getUserByEmailModel,
+   getUserByUsernameModel,
+} from '../models/user'
+
+/**
+ * Send OTP
+ * @param req : mobileNumber
+ * @param res : message
+ * @returns
+ */
+export const sendOTPController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { mobileNumber, countryCode } = req.body
+      const otp = Math.floor(100000 + Math.random() * 900000).toString()
+      const expiresAt = new Date(Date.now() + 60000)
+
+      const otpData: IOtp = {
+         mobileNumber,
+         countryCode,
+         expiresAt,
+         otp,
+      }
+
+      await addOtpModel(otpData)
+
+      return res.status(200).json({
+         message: 'OTP sent successfully',
+         data: {
+            otp,
+            mobileNumber,
+            countryCode,
+            expiresAt,
+         },
+      })
+   } catch (err) {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+/**
+ * Verify OTP
+ * @param req : mobileNumber, otp
+ * @param res : message
+ * @returns
+ */
+export const verifyOTPController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { mobileNumber, otp } = req.body
+
+      const otpData = await getOtpByMobileNumberModel(mobileNumber, otp)
+
+      if (!otpData) {
+         return res.status(404).json({ message: 'Invalid mobile number' })
+      }
+
+      if (otpData.otp !== otp) {
+         return res.status(401).json({ message: 'Invalid OTP' })
+      }
+
+      if (otpData.expiresAt < new Date()) {
+         return res.status(401).json({ message: 'OTP expired' })
+      }
+
+      await verifyOtpModel(mobileNumber, otp)
+
+      req.session!.mobileNumber = mobileNumber
+
+      return res.status(200).json({ message: 'OTP verified successfully' })
+   } catch (err) {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+/**
+ * Add user details
+ * @param req : username, email, firstName, lastName, role, profilePicture, bio
+ * @param res : message
+ * @returns
+ */
+export const addUserDetailsController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { mobileNumber } = req.session!
+
+      if (!mobileNumber) {
+         return res.status(401).json({ message: 'Unauthorized' })
+      }
+      const {
+         username,
+         email,
+         firstName,
+         lastName,
+         role,
+         profilePicture,
+         bio,
+      } = req.body
+
+      const user = await getUserByUsernameModel(username)
+
+      if (user) {
+         return res.status(409).json({ message: 'Username already exists' })
+      }
+
+      const emailUser = await getUserByEmailModel(email)
+
+      if (emailUser) {
+         return res.status(409).json({ message: 'Email already exists' })
+      }
+
+      // add user to database
+      const result = await addUserModel({
+         username,
+         email,
+         firstName,
+         lastName,
+         role,
+         profilePicture,
+         bio,
+      })
+
+      console.log({ result })
+      const payload = {
+         userID: result.userID,
+         username,
+         name: firstName + ' ' + lastName,
+         email,
+      }
+
+      const token = await generateJWT(payload)
+
+      res.cookie('OG-AUTH', token, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+      })
+
+      console.log({ result })
+
+      return res.status(200).json({ message: 'User added successfully' })
+   } catch (err) {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
 
 /**
  * Logout a user

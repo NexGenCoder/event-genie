@@ -3,7 +3,7 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2'
 
 import {
-   createUserModel,
+   createGoogleUserModel,
    getUserByEmailModel,
    updateUserGoogleIdModel,
    getUserByGoogleIdModel,
@@ -41,7 +41,7 @@ passport.use(
             }
 
             if (!user) {
-               user = await createUserModel({
+               user = await createGoogleUserModel({
                   firstName: profile.name.givenName,
                   lastName: profile.name.familyName,
                   email: profile.emails ? profile.emails[0].value : '',

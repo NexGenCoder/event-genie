@@ -1,5 +1,53 @@
-import { IUser } from 'types/user'
+import { IUser, IOtp } from 'types/user'
 import { pool } from './../utils/dbconnect'
+
+export const addOtpModel = async (otp: IOtp) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query(
+         'INSERT INTO Otps (mobileNumber, countryCode, expiresAt, otp) VALUES (?, ?, ?, ?)',
+         [otp.mobileNumber, otp.countryCode, otp.expiresAt, otp.otp],
+      )
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error adding otp: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+
+export const getOtpByMobileNumberModel = async (
+   mobileNumber: string,
+   otp: string,
+) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query(
+         'SELECT * FROM Otps WHERE mobileNumber = ? AND otp = ?',
+         [mobileNumber, otp],
+      )
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error getting otp by mobile number: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+
+export const verifyOtpModel = async (mobileNumber: string, otp: string) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query(
+         'UPDATE Otps SET isVerified = true WHERE mobileNumber = ? AND otp = ?',
+         [mobileNumber, otp],
+      )
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error verifying otp: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
 
 export const getUserByUsernameModel = async (username: string) => {
    const conn = await pool.getConnection()
@@ -62,7 +110,30 @@ export const getUserIdByUsernameOrEmailModel = async (
    }
 }
 
-export const createUserModel = async (user: IUser) => {
+export const addUserModel = async (user: IUser) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query(
+         'INSERT INTO users (username, email, firstName, lastName, role, profilePicture, bio) VALUES (?, ?, ?, ?, ?, ?, ?)',
+         [
+            user.username,
+            user.email,
+            user.firstName,
+            user.lastName,
+            user.role,
+            user.profilePicture,
+            user.bio,
+         ],
+      )
+      const insertId = result.insertId.toString()
+      return { userID: insertId, ...user }
+   } catch (error) {
+      throw new Error(`Error adding user: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+export const createGoogleUserModel = async (user: IUser) => {
    const conn = await pool.getConnection()
    try {
       const result = await conn.query(
@@ -70,7 +141,7 @@ export const createUserModel = async (user: IUser) => {
          [user.firstName, user.lastName, user.email, user.googleId],
       )
       const insertId = result.insertId.toString()
-      return { id: insertId, ...user }
+      return { userID: insertId, ...user }
    } catch (error) {
       throw new Error(`Error creating user: ${error}`)
    } finally {
