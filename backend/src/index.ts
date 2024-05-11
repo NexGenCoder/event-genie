@@ -14,6 +14,7 @@ import createVenuesTable from './migrations/create_venues_table'
 import createEventsTable from './migrations/create_events_table'
 import createRSVPsTable from './migrations/create_rsvp_table'
 import createEventParticipantsTable from './migrations/create_event_participants_table'
+import createOtpsTable from './migrations/create_otps_table'
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -46,7 +47,6 @@ const server = http.createServer(app)
 server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
-
 ;(async () => {
    try {
       await createUsersTable()
@@ -54,6 +54,7 @@ server.listen(PORT, () => {
       await createEventsTable()
       await createRSVPsTable()
       await createEventParticipantsTable()
+      await createOtpsTable()
    } catch (error) {
       console.error('Error running migration:', error)
       process.exit(1)
