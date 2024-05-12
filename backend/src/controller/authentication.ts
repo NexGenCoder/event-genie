@@ -4,18 +4,47 @@ import { IUser, IOtp } from 'types/user'
 import passport from '../services/passport'
 import { generateJWT } from '../utils/auth'
 import {
-   addOtpModel,
-   addUserModel,
-   getOtpByMobileNumberModel,
-   verifyOtpModel,
    getUserByEmailModel,
    getUserByUsernameModel,
+   getUserByUserIdModel,
+   createUserIfNotExistsModel,
+   updateUserProfileModel,
 } from '../models/user'
 
+import {
+   addOtpModel,
+   getOtpByMobileNumberModel,
+   verifyOtpModel,
+} from '../models/otp'
+
 /**
- * Send OTP
- * @param req : mobileNumber
- * @param res : message
+ * Get self user data from token
+ * @param req : -
+ * @param res : user
+ * @returns
+ */
+export const getSelfController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { userId } = res.locals
+      const user = await getUserByUserIdModel(userId)
+      if (!user) {
+         res.clearCookie('OG-AUTH')
+         return res.status(404).json({ message: 'User not found' })
+      }
+      return res.status(200).json({ user })
+   } catch (err) {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+/**
+ * Send OTP for Sign in or Sign up
+ * @param req : mobile, countryCode
+ * @param res : message, data
  * @returns
  */
 export const sendOTPController = async (
@@ -23,24 +52,23 @@ export const sendOTPController = async (
    res: express.Response,
 ) => {
    try {
-      const { mobileNumber, countryCode } = req.body
+      const { mobile, countryCode } = req.body
       const otp = Math.floor(100000 + Math.random() * 900000).toString()
-      const expiresAt = new Date(Date.now() + 60000)
+      const expiresAt = new Date(Date.now() + 6000000) // 10 minutes
 
       const otpData: IOtp = {
-         mobileNumber,
+         mobile,
          countryCode,
          expiresAt,
          otp,
       }
 
       await addOtpModel(otpData)
-
       return res.status(200).json({
          message: 'OTP sent successfully',
          data: {
             otp,
-            mobileNumber,
+            mobile,
             countryCode,
             expiresAt,
          },
@@ -52,8 +80,8 @@ export const sendOTPController = async (
 }
 
 /**
- * Verify OTP
- * @param req : mobileNumber, otp
+ * Verify OTP for Sign in or Sign up
+ * @param req : mobile, otp
  * @param res : message
  * @returns
  */
@@ -62,27 +90,35 @@ export const verifyOTPController = async (
    res: express.Response,
 ) => {
    try {
-      const { mobileNumber, otp } = req.body
-
-      const otpData = await getOtpByMobileNumberModel(mobileNumber, otp)
-
+      const { mobile, otp } = req.body
+      const otpData = await getOtpByMobileNumberModel(mobile as number, otp)
       if (!otpData) {
-         return res.status(404).json({ message: 'Invalid mobile number' })
+         return res.status(404).json({ message: 'OTP not found' })
       }
 
       if (otpData.otp !== otp) {
          return res.status(401).json({ message: 'Invalid OTP' })
       }
 
-      if (otpData.expiresAt < new Date()) {
+      if (otpData.expiresAt < new Date() || otpData.isVerified) {
          return res.status(401).json({ message: 'OTP expired' })
       }
 
-      await verifyOtpModel(mobileNumber, otp)
+      await verifyOtpModel(mobile as number, otp)
+      const userData = await createUserIfNotExistsModel(mobile as number)
+      const payload = {
+         userId: userData.userId,
+      }
+      const token = await generateJWT(payload)
+      res.cookie('OG-AUTH', token, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+      })
 
-      req.session!.mobileNumber = mobileNumber
-
-      return res.status(200).json({ message: 'OTP verified successfully' })
+      return res.status(200).json({
+         message: 'OTP verified successfully',
+         data: userData,
+      })
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })
@@ -90,30 +126,19 @@ export const verifyOTPController = async (
 }
 
 /**
- * Add user details
+ * Update user details
  * @param req : username, email, firstName, lastName, role, profilePicture, bio
  * @param res : message
  * @returns
  */
-export const addUserDetailsController = async (
+export const updateUserDetailsController = async (
    req: express.Request,
    res: express.Response,
 ) => {
    try {
-      const { mobileNumber } = req.session!
-
-      if (!mobileNumber) {
-         return res.status(401).json({ message: 'Unauthorized' })
-      }
-      const {
-         username,
-         email,
-         firstName,
-         lastName,
-         role,
-         profilePicture,
-         bio,
-      } = req.body
+      const { userId } = res.locals
+      const { username, email, firstName, lastName, profilePicture, bio } =
+         req.body
 
       const user = await getUserByUsernameModel(username)
 
@@ -127,35 +152,20 @@ export const addUserDetailsController = async (
          return res.status(409).json({ message: 'Email already exists' })
       }
 
-      // add user to database
-      const result = await addUserModel({
+      await updateUserProfileModel(userId, {
          username,
          email,
          firstName,
          lastName,
-         role,
          profilePicture,
+         isEmailVerified: false,
+         isProfileCompleted: true,
          bio,
       })
 
-      console.log({ result })
-      const payload = {
-         userID: result.userID,
-         username,
-         name: firstName + ' ' + lastName,
-         email,
-      }
-
-      const token = await generateJWT(payload)
-
-      res.cookie('OG-AUTH', token, {
-         httpOnly: true,
-         secure: process.env.NODE_ENV === 'production',
-      })
-
-      console.log({ result })
-
-      return res.status(200).json({ message: 'User added successfully' })
+      return res
+         .status(200)
+         .json({ message: 'User details updated successfully' })
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })
@@ -218,21 +228,20 @@ export const googleAuthCallbackController = (
 ) => {
    passport.authenticate('google', async (err: Error, user: IUser) => {
       if (err) {
+         console.error(err)
          return res
             .status(401)
             .json({ message: 'Google authentication failed' })
       }
       if (!user) {
+         console.error('User not found')
          return res
             .status(401)
             .json({ message: 'Google authentication failed' })
       }
 
       const payload = {
-         userID: user.userID,
-         username: user.username,
-         name: user.firstName + ' ' + user.lastName,
-         email: user.email,
+         userId: user.userId,
       }
 
       const token = await generateJWT(payload)

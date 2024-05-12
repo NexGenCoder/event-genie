@@ -1,17 +1,15 @@
 export interface IUser {
-   userID?: number
+   userId?: number
    username?: string
    firstName?: string
    lastName?: string
    email?: string
-   googleId?: string
-   role?: 'Organizer' | 'Vendor' | 'Guest'
-   subscription?: 'Free' | 'Basic' | 'Premium'
    profilePicture?: string
+   googleId?: string
    bio?: string
    createdAt?: Date
    updatedAt?: Date
-   mobileNumber?: string
+   mobile?: string
    isMobileVerified?: boolean
    isEmailVerified?: boolean
    isProfileCompleted?: boolean
@@ -19,14 +17,11 @@ export interface IUser {
    isAccountSuspended?: boolean
 }
 export interface IUserPayloadForToken {
-   userID: number
-   username: string
-   name: string
-   email: string
+   userId: number
 }
 
 export interface IOtp {
-   mobileNumber: string
+   mobile: string
    countryCode: string
    expiresAt?: Date
    createdAt?: Date

@@ -11,7 +11,6 @@ export const authinticate = async (
    if (!token) {
       return res.status(401).json({ error: 'Unauthorized' })
    }
-
    try {
       const payload = await verifyJWT(token)
 

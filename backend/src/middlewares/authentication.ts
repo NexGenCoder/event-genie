@@ -7,7 +7,7 @@ export const sendOtpValidator = (
    next: express.NextFunction,
 ) => {
    const schema = Joi.object({
-      mobileNumber: Joi.string()
+      mobile: Joi.string()
          .length(10)
          .pattern(/^[0-9]+$/)
          .required()
@@ -41,7 +41,7 @@ export const verifyOtpValidator = (
    next: express.NextFunction,
 ) => {
    const schema = Joi.object({
-      mobileNumber: Joi.string()
+      mobile: Joi.string()
          .length(10)
          .pattern(/^[0-9]+$/)
          .required()
@@ -98,14 +98,6 @@ export const addUserDetailsValidator = (
          'string.min': `Last name should have a minimum length of {#limit}`,
          'string.max': `Last name should have a maximum length of {#limit}`,
       }),
-      role: Joi.string()
-         .valid('Organizer', 'Vendor', 'Guest')
-         .required()
-         .messages({
-            'string.base': `Role should be a type of 'text'`,
-            'string.empty': `Role cannot be an empty field`,
-            'any.only': `Role should be either 'Organizer', 'Vendor' or 'Guest'`,
-         }),
       profilePicture: Joi.string().uri().optional().messages({
          'string.base': `Profile picture should be a type of 'text'`,
          'string.empty': `Profile picture cannot be an empty field`,

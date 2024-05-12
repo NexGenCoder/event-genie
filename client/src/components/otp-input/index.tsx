@@ -1,7 +1,11 @@
 import React, { ChangeEvent, KeyboardEvent, useRef, useState } from 'react'
 
-const OTPInput: React.FC = () => {
-   const [otp, setOtp] = useState<string[]>(['', '', '', ''])
+type OTPInputProps = {
+   otp: string[]
+   setOtp: React.Dispatch<React.SetStateAction<string[]>>
+}
+
+const OTPInput = ({ otp, setOtp }: OTPInputProps) => {
    const inputRefs = useRef<HTMLInputElement[]>([])
    const [activeInput, setActiveInput] = useState<number>(0)
 
@@ -11,7 +15,7 @@ const OTPInput: React.FC = () => {
       otpCopy[index] = value
       setOtp(otpCopy)
 
-      if (index < 3 && value !== '') {
+      if (index < 5 && value !== '') {
          inputRefs.current[index + 1].focus()
       }
    }

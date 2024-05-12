@@ -2,7 +2,7 @@
 
 ## User Table
 
-- `userID`: (Optional) number
+- `userId`: (Optional) number
 - `username`: (Optional) string
 - `firstName`: (Optional) string
 - `lastName`: (Optional) string
@@ -14,7 +14,7 @@
 - `bio`: (Optional) string
 - `createdAt`: (Optional) Date
 - `updatedAt`: (Optional) Date
-- `mobileNumber`: (Optional) string
+- `mobile`: (Optional) string
 - `isMobileVerified`: (Optional) boolean
 - `isEmailVerified`: (Optional) boolean
 - `isProfileCompleted`: boolean
@@ -53,7 +53,7 @@
 
 - `rsvpID`: (Optional) number
 - `eventID`: number (Foreign key reference to Event.EventID)
-- `userID`: number (Foreign key reference to User.UserID)
+- `userId`: number (Foreign key reference to User.UserID)
 - `role`: "Organizer" | "Vendor" | "Guest"
 - `rsvpStatus`: "Accepted" | "Declined" | "Pending" (Optional)
 - `createdAt`: (Optional) Date
@@ -63,7 +63,7 @@
 
 - `participantID`: (Optional) number
 - `eventID`: number
-- `userID`: number
+- `userId`: number
 - `rvspID`: number
 - `role`: "Organizer" | "Vendor" | "Guest"
 - `rsvpStatus`: "Accepted" | "Declined" | "Pending" (Optional)
@@ -94,7 +94,7 @@
 
 - `participantID`: (Optional) number
 - `channelID`: number (Foreign key reference to channel.channelID)
-- `userID`: number (Foreign key reference to User.UserID)
+- `userId`: number (Foreign key reference to User.UserID)
 - `joinedAt`: (Optional) Date
 - `lastSeen`: (Optional) Date
 - `createdAt`: (Optional) Date
