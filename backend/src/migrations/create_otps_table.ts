@@ -5,13 +5,15 @@ const createOtpsTable = async () => {
    try {
       await conn.query(`
          CREATE TABLE IF NOT EXISTS Otps (
-            otpID INT AUTO_INCREMENT PRIMARY KEY,
-            mobileNumber VARCHAR(10) NOT NULL,
-            countryCode VARCHAR(2) NOT NULL,
+            otpId VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+            mobile VARCHAR(20) NOT NULL,
+            countryCode VARCHAR(5) NOT NULL,
             expiresAt DATETIME,
             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
             otp VARCHAR(6),
-            isVerified BOOLEAN DEFAULT FALSE
+            isVerified BOOLEAN DEFAULT FALSE,
+            userId VARCHAR(36),
+            FOREIGN KEY (userId) REFERENCES users(userId)
          )
       `)
       console.log('Otps table created')

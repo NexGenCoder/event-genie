@@ -1,53 +1,5 @@
-import { IUser, IOtp } from 'types/user'
+import { IUser } from 'types/user'
 import { pool } from './../utils/dbconnect'
-
-export const addOtpModel = async (otp: IOtp) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'INSERT INTO Otps (mobileNumber, countryCode, expiresAt, otp) VALUES (?, ?, ?, ?)',
-         [otp.mobileNumber, otp.countryCode, otp.expiresAt, otp.otp],
-      )
-      return result[0]
-   } catch (error) {
-      throw new Error(`Error adding otp: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
-
-export const getOtpByMobileNumberModel = async (
-   mobileNumber: string,
-   otp: string,
-) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'SELECT * FROM Otps WHERE mobileNumber = ? AND otp = ?',
-         [mobileNumber, otp],
-      )
-      return result[0]
-   } catch (error) {
-      throw new Error(`Error getting otp by mobile number: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
-
-export const verifyOtpModel = async (mobileNumber: string, otp: string) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'UPDATE Otps SET isVerified = true WHERE mobileNumber = ? AND otp = ?',
-         [mobileNumber, otp],
-      )
-      return result[0]
-   } catch (error) {
-      throw new Error(`Error verifying otp: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
 
 export const getUserByUsernameModel = async (username: string) => {
    const conn = await pool.getConnection()
@@ -59,6 +11,75 @@ export const getUserByUsernameModel = async (username: string) => {
       return result[0]
    } catch (error) {
       throw new Error(`Error getting user by username: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+
+export const createUserIfNotExistsModel = async (mobile: number) => {
+   const conn = await pool.getConnection()
+   try {
+      const existingUser = await conn.query(
+         'SELECT * FROM users WHERE mobile = ?',
+         [mobile],
+      )
+      if (existingUser.length > 0) {
+         return existingUser[0]
+      } else {
+         const newUser = { mobile, isMobileVerified: true }
+         const result = await conn.query(
+            'INSERT INTO users (mobile, isMobileVerified) VALUES (?, ?)',
+            [newUser.mobile, newUser.isMobileVerified],
+         )
+         const insertId = result.insertId
+         const userData = await conn.query(
+            'SELECT * FROM users WHERE userId = ?',
+            [insertId],
+         )
+         return userData[0]
+      }
+   } catch (error) {
+      throw new Error(`Error getting/creating user by mobile: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+
+export const getUserByUserIdModel = async (userId: string) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query('SELECT * FROM users WHERE userId = ?', [
+         userId,
+      ])
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error getting user by id: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
+
+export const updateUserProfileModel = async (userId: string, user: IUser) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query(
+         'UPDATE users SET username = ?, email = ?, firstName = ?, lastName = ?, profilePicture = ?, bio = ?, isMobileVerified = ?, isEmailVerified = ?, isProfileCompleted = ? WHERE userId = ?',
+         [
+            user.username,
+            user.email,
+            user.firstName,
+            user.lastName,
+            user.profilePicture,
+            user.bio,
+            user.isMobileVerified,
+            user.isEmailVerified,
+            user.isProfileCompleted,
+            userId,
+         ],
+      )
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error updating user profile: ${error}`)
    } finally {
       conn.release()
    }
@@ -110,44 +131,48 @@ export const getUserIdByUsernameOrEmailModel = async (
    }
 }
 
-export const addUserModel = async (user: IUser) => {
+export const createOrUpdateGoogleUserModel = async (user: IUser) => {
    const conn = await pool.getConnection()
    try {
-      const result = await conn.query(
-         'INSERT INTO users (username, email, firstName, lastName, role, profilePicture, bio) VALUES (?, ?, ?, ?, ?, ?, ?)',
-         [
-            user.username,
-            user.email,
-            user.firstName,
-            user.lastName,
-            user.role,
-            user.profilePicture,
-            user.bio,
-         ],
+      const existingUser = await conn.query(
+         'SELECT * FROM users WHERE email = ?',
+         [user.email],
       )
-      const insertId = result.insertId.toString()
-      return { userID: insertId, ...user }
+      if (existingUser.length > 0) {
+         const updateUser = { ...user, isEmailVerified: true }
+         await conn.query(
+            'UPDATE users SET googleId = ?, profilePicture = ?, isEmailVerified = ? WHERE email = ?',
+            [
+               updateUser.googleId,
+               updateUser.profilePicture,
+               updateUser.isEmailVerified,
+               user.email,
+            ],
+         )
+         const updatedUser = { userId: existingUser[0].userId, ...updateUser }
+         return updatedUser
+      } else {
+         const result = await conn.query(
+            'INSERT INTO users (firstName, lastName, email, googleId, profilePicture, isEmailVerified) VALUES (?, ?, ?, ?, ?, ?)',
+            [
+               user.firstName,
+               user.lastName,
+               user.email,
+               user.googleId,
+               user.profilePicture,
+               true,
+            ],
+         )
+         const insertId = result.insertId.toString()
+         return { userId: insertId, ...user, verifyEmail: true }
+      }
    } catch (error) {
-      throw new Error(`Error adding user: ${error}`)
+      throw new Error(`Error creating/updating user: ${error}`)
    } finally {
       conn.release()
    }
 }
-export const createGoogleUserModel = async (user: IUser) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'INSERT INTO users (firstName, lastName, email, googleId) VALUES (?, ?, ?, ?)',
-         [user.firstName, user.lastName, user.email, user.googleId],
-      )
-      const insertId = result.insertId.toString()
-      return { userID: insertId, ...user }
-   } catch (error) {
-      throw new Error(`Error creating user: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
+
 export const getAllUsers = async () => {
    const conn = await pool.getConnection()
    try {
@@ -155,41 +180,6 @@ export const getAllUsers = async () => {
       return result[0]
    } catch (error) {
       throw new Error(`Error getting all users: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
-export const updateUserPasswordModel = async (
-   userId: string,
-   passwordHash: string,
-) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'UPDATE users SET passwordHash = ? WHERE id = ?',
-         [passwordHash, userId],
-      )
-      return result[0]
-   } catch (error) {
-      throw new Error(`Error updating user password: ${error}`)
-   } finally {
-      conn.release()
-   }
-}
-
-export const updateUserGoogleIdModel = async (
-   email: string,
-   googleId: string,
-) => {
-   const conn = await pool.getConnection()
-   try {
-      const result = await conn.query(
-         'UPDATE users SET googleId = ? WHERE email = ?',
-         [googleId, email],
-      )
-      return result[0]
-   } catch (error) {
-      throw new Error(`Error updating user googleId: ${error}`)
    } finally {
       conn.release()
    }

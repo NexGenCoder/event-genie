@@ -5,17 +5,31 @@ import React, { useState } from 'react'
 import { FaMobileAlt } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { IoMdLogIn } from 'react-icons/io'
-
+import { MdOutlineSendToMobile } from 'react-icons/md'
 import OTPInput from '@/components/otp-input'
+import toast, { Toaster } from 'react-hot-toast'
 import LoginImage from '../../../public/OccasionGuru.jpeg'
+import {
+   useSendOtpMutation,
+   useVerifyOtpMutation,
+} from '@/app/services/authApi'
+import { useRouter } from 'next/navigation'
 
 function LoginForm() {
+   const router = useRouter()
    const [formData, setFormData] = useState({ mobile: '' })
+   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']) // 7 digits for '1234567
    const [typing, setTyping] = useState(false)
    const [showOtp, setShowOtp] = useState(false)
    const [message, setMessage] = useState(
       '⌨️ Enter your mobile number to get OTP',
    )
+
+   const [sendOtp, { isLoading: isSendingOtp, data: sendOtpResponse }] =
+      useSendOtpMutation()
+
+   const [verifyOtp, { isLoading: isOtpVerifying, data: verifyOtpResponse }] =
+      useVerifyOtpMutation()
 
    const mobileInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.value[0] === '0') {
@@ -42,11 +56,41 @@ function LoginForm() {
       }, 1500)
    }
 
-   const handleSendOtp = (e: React.FormEvent<HTMLFormElement>) => {
+   const handleSendOtp = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      console.log(`Sending OTP to ${formData.mobile}`)
-      if (message === '✅ Valid Mobile Number') {
+      const requestBody = {
+         mobile: formData.mobile,
+         countryCode: '91',
+      }
+      try {
+         const response = await sendOtp(requestBody).unwrap()
+         toast.success(response.message, { position: 'top-right' })
          setShowOtp(true)
+      } catch (error) {
+         toast.error('Error Occurred', { position: 'top-right' })
+         console.error(error)
+      }
+   }
+
+   const handleVerifyOtp = async () => {
+      const requestBody = {
+         mobile: formData.mobile,
+         otp: otp.join(''),
+      }
+
+      try {
+         const response = await verifyOtp(requestBody).unwrap()
+         toast.success(response.message, { position: 'top-right' })
+         if (response?.data) {
+            console.log('User data:', response.data)
+            router.push('/profile')
+         } else {
+            router.push('/complete-profile')
+            console.log('User data:', response.data)
+         }
+      } catch (error) {
+         toast.error('Error Occurred', { position: 'top-right' })
+         console.error(error)
       }
    }
 
@@ -122,7 +166,7 @@ function LoginForm() {
                            className="bg-[#ff3ea2] text-white rounded-md border border-[#ff3ea2] py-2 px-4 w-fit flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                            disabled={!formData.mobile}
                         >
-                           <IoMdLogIn className="text-2xl" />
+                           <MdOutlineSendToMobile className="text-2xl" />
                            <span className="text-xl">Send OTP</span>
                         </button>
                      </div>
@@ -147,10 +191,11 @@ function LoginForm() {
                         >
                            Enter OTP
                         </label>
-                        <OTPInput />
+                        <OTPInput otp={otp} setOtp={setOtp} />
                         <button
                            type="button"
                            className="bg-[#ff3ea2] text-white rounded-md border border-[#ff3ea2] py-2 px-4 w-fit flex items-center gap-2"
+                           onClick={handleVerifyOtp}
                         >
                            <IoMdLogIn className="text-2xl" />
                            <span className="text-xl">Sign In</span>
@@ -178,6 +223,7 @@ function LoginForm() {
                </Link>
             </div>
          </div>
+         <Toaster />
       </div>
    )
 }

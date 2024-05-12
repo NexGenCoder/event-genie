@@ -3,9 +3,8 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2'
 
 import {
-   createGoogleUserModel,
+   createOrUpdateGoogleUserModel,
    getUserByEmailModel,
-   updateUserGoogleIdModel,
    getUserByGoogleIdModel,
 } from '../models/user'
 import { IUser } from '../types/user'
@@ -18,7 +17,7 @@ const callbackURL = process.env.GOOGLE_CALLBACK_URL
 
 if (!clientID || !clientSecret || !callbackURL) {
    throw new Error(
-      'Google OAuth credentials are missing. Please check your environment variables.',
+      'Google credentials are missing. Please check your .env file',
    )
 }
 
@@ -31,20 +30,22 @@ passport.use(
       },
       async (accessToken, refreshToken, profile, done) => {
          try {
-            let user = await getUserByEmailModel(profile.emails[0].value)
-            if (user && profile.emails === user.email) {
-               user = await updateUserGoogleIdModel(
-                  profile.emails[0].value,
-                  profile.id,
-               )
+            let user = await getUserByEmailModel(profile.email)
+            if (user && profile.email === user.email) {
+               user = await createOrUpdateGoogleUserModel({
+                  email: profile.email,
+                  googleId: profile.id,
+                  profilePicture: profile.picture,
+               })
                return done(null, user)
             }
 
             if (!user) {
-               user = await createGoogleUserModel({
+               user = await createOrUpdateGoogleUserModel({
                   firstName: profile.name.givenName,
                   lastName: profile.name.familyName,
                   email: profile.emails ? profile.emails[0].value : '',
+                  profilePicture: profile.picture,
                   googleId: profile.id,
                })
             }
@@ -57,12 +58,13 @@ passport.use(
 )
 
 passport.serializeUser((user: IUser, done) => {
-   done(null, user.userID)
+   done(null, user.userId)
 })
 
 passport.deserializeUser(async (id: string, done) => {
    try {
       const user = await getUserByGoogleIdModel(id)
+      console.log('🚀 ~ passport.deserializeUser ~ user:', user)
       done(null, user)
    } catch (err) {
       done(err, null)

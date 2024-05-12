@@ -10,10 +10,6 @@ import router from './routes'
 import passport from './services/passport'
 import { pool } from './utils/dbconnect'
 import createUsersTable from './migrations/create_users_table'
-import createVenuesTable from './migrations/create_venues_table'
-import createEventsTable from './migrations/create_events_table'
-import createRSVPsTable from './migrations/create_rsvp_table'
-import createEventParticipantsTable from './migrations/create_event_participants_table'
 import createOtpsTable from './migrations/create_otps_table'
 
 dotenv.config()
@@ -50,10 +46,6 @@ server.listen(PORT, () => {
 ;(async () => {
    try {
       await createUsersTable()
-      await createVenuesTable()
-      await createEventsTable()
-      await createRSVPsTable()
-      await createEventParticipantsTable()
       await createOtpsTable()
    } catch (error) {
       console.error('Error running migration:', error)
