@@ -7,3 +7,12 @@ export default function Login() {
       </section>
    )
 }
+
+export function generateMetadata() {
+   return {
+      title: 'Login | Getogether',
+      description: "Login to Getogether. Let's get started with Getogether.",
+      image: '/next.svg',
+      url: 'https://getogether.com/login',
+   }
+}

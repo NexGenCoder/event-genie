@@ -30,7 +30,7 @@ type ISendOtpResponse = {
    }
 }
 
-type IVerifyOtpResponse = {
+type IUserResponse = {
    message: string
    data?: {
       id: string
@@ -49,6 +49,10 @@ type IVerifyOtpResponse = {
 
 export const authApi = api.injectEndpoints({
    endpoints: (builder) => ({
+      getSelf: builder.query<IUserResponse, void>({
+         query: () => '/auth/self',
+         providesTags: ['Self'],
+      }),
       sendOtp: builder.mutation<ISendOtpResponse, ISendOtp>({
          query: (body) => ({
             url: '/auth/send-otp',
@@ -57,7 +61,7 @@ export const authApi = api.injectEndpoints({
          }),
          invalidatesTags: ['SendOtp'],
       }),
-      verifyOtp: builder.mutation<IVerifyOtpResponse, IVerifyOtp>({
+      verifyOtp: builder.mutation<IUserResponse, IVerifyOtp>({
          query: (body) => ({
             url: '/auth/verify-otp',
             method: 'POST',
@@ -87,4 +91,5 @@ export const {
    useVerifyOtpMutation,
    useLogoutMutation,
    useAddUserDetailsMutation,
+   useGetSelfQuery,
 } = authApi

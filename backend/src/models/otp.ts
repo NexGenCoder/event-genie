@@ -38,7 +38,7 @@ export const verifyOtpModel = async (mobile: number, otp: string) => {
    const conn = await pool.getConnection()
    try {
       const result = await conn.query(
-         'UPDATE Otps SET isMobileVerified = true WHERE mobile = ? AND otp = ?',
+         'UPDATE Otps SET isVerified = true WHERE mobile = ? AND otp = ?',
          [mobile, otp],
       )
       return result[0]

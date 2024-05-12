@@ -26,7 +26,7 @@ export default (router: express.Router) => {
       updateUserDetailsController,
    )
    router.get('/auth/self', authinticate, getSelfController)
-   router.get('/auth/logout', authinticate, logoutController)
+   router.post('/auth/logout', authinticate, logoutController)
    router.get('/auth/google', googleAuthController)
    router.get('/auth/google/callback', googleAuthCallbackController)
 }

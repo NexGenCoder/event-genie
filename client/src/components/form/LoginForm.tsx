@@ -14,6 +14,8 @@ import {
    useVerifyOtpMutation,
 } from '@/app/services/authApi'
 import { useRouter } from 'next/navigation'
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
+import { API } from '@/constants'
 
 function LoginForm() {
    const router = useRouter()
@@ -92,12 +94,6 @@ function LoginForm() {
          toast.error('Error Occurred', { position: 'top-right' })
          console.error(error)
       }
-   }
-
-   const isLoggedin = false
-   const API = 'http://localhost:5000/api'
-   if (isLoggedin) {
-      console.log('Logged in')
    }
 
    return (
