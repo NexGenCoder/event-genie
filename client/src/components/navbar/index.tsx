@@ -13,7 +13,6 @@ import NavUserProfileShimmer from './user-profile-shimmer'
 
 function Navbar() {
    const { isLoggedin, data, isLoading } = useIsAuthenticated()
-   console.log('🚀 ~ Navbar ~ data:', data)
    const [logout] = useLogoutMutation()
    const router = useRouter()
    const handleLogout = async () => {

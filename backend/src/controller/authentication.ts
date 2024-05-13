@@ -4,8 +4,6 @@ import { IUser, IOtp } from 'types/user'
 import passport from '../services/passport'
 import { generateJWT } from '../utils/auth'
 import {
-   getUserByEmailModel,
-   getUserByUsernameModel,
    getUserByUserIdModel,
    createUserIfNotExistsModel,
    updateUserProfileModel,
@@ -142,18 +140,6 @@ export const updateUserDetailsController = async (
       const { userId } = res.locals
       const { username, email, firstName, lastName, profilePicture, bio } =
          req.body
-
-      const user = await getUserByUsernameModel(username)
-
-      if (user) {
-         return res.status(409).json({ message: 'Username already exists' })
-      }
-
-      const emailUser = await getUserByEmailModel(email)
-
-      if (emailUser) {
-         return res.status(409).json({ message: 'Email already exists' })
-      }
 
       await updateUserProfileModel(userId, {
          username,

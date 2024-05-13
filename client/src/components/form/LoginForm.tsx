@@ -14,7 +14,6 @@ import {
    useVerifyOtpMutation,
 } from '@/app/services/authApi'
 import { useRouter } from 'next/navigation'
-import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
 import { API } from '@/constants'
 
 function LoginForm() {
@@ -84,11 +83,9 @@ function LoginForm() {
          const response = await verifyOtp(requestBody).unwrap()
          toast.success(response.message, { position: 'top-right' })
          if (response?.data) {
-            console.log('User data:', response.data)
             router.push('/profile')
          } else {
-            router.push('/complete-profile')
-            console.log('User data:', response.data)
+            router.push('/edit-profile')
          }
       } catch (error) {
          toast.error('Error Occurred', { position: 'top-right' })

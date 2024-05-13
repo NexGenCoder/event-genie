@@ -38,3 +38,9 @@ body,
       margin: 0;
    }
 }
+
+.ant-upload,
+.ant-upload-select {
+   height: 200px !important;
+   width: 200px !important;
+}

@@ -15,7 +15,6 @@ type IAddUserDetails = {
    email: string
    firstName: string
    lastName: string
-   role: 'Organizer' | 'Vendor' | 'Guest'
    profilePicture: string
    bio: string
 }
@@ -38,7 +37,6 @@ type IUserResponse = {
       email: string
       firstName: string
       lastName: string
-      role: 'Organizer' | 'Vendor' | 'Guest'
       profilePicture: string
       bio: string
       isMobileVerified: boolean
@@ -51,7 +49,7 @@ export const authApi = api.injectEndpoints({
    endpoints: (builder) => ({
       getSelf: builder.query<IUserResponse, void>({
          query: () => '/auth/self',
-         providesTags: ['Self'],
+         providesTags: ['Self', 'AddUserDetails'],
       }),
       sendOtp: builder.mutation<ISendOtpResponse, ISendOtp>({
          query: (body) => ({
@@ -75,7 +73,7 @@ export const authApi = api.injectEndpoints({
             method: 'POST',
             body,
          }),
-         invalidatesTags: ['AddUserDetails'],
+         invalidatesTags: ['AddUserDetails', 'Self'],
       }),
       logout: builder.mutation<void, void>({
          query: () => ({

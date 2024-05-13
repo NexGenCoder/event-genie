@@ -64,7 +64,6 @@ passport.serializeUser((user: IUser, done) => {
 passport.deserializeUser(async (id: string, done) => {
    try {
       const user = await getUserByGoogleIdModel(id)
-      console.log('🚀 ~ passport.deserializeUser ~ user:', user)
       done(null, user)
    } catch (err) {
       done(err, null)

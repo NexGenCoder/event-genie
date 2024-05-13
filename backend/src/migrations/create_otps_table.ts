@@ -16,7 +16,6 @@ const createOtpsTable = async () => {
             FOREIGN KEY (userId) REFERENCES users(userId)
          )
       `)
-      console.log('Otps table created')
    } catch (error) {
       console.error('Error creating otps table: ', error)
    } finally {

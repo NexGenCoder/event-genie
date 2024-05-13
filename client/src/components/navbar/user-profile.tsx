@@ -14,7 +14,7 @@ function NavUserProfile({ profilePicture, firstName }: NavUserProfileProps) {
                alt="Profile Picture"
                width={40}
                height={40}
-               className="rounded-full"
+               className="rounded-full aspect-square object-cover"
             />
          </div>
 
