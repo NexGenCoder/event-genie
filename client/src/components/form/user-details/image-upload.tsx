@@ -1,24 +1,36 @@
 import React, { useState } from 'react'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { Upload } from 'antd'
-import type { UploadProps } from 'antd'
+import type { GetProp, UploadProps } from 'antd'
 import Image from 'next/image'
-import { imageUpload } from '@/utils/uploadImage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 interface ImageUploadProps {
-   imageUrl: string
-   setImageUrl: (imageUrl: string) => void
+   setImage: React.Dispatch<React.SetStateAction<File | null>>
+   defaultImage?: string
 }
 
-const ImageUpload = ({ imageUrl, setImageUrl }: ImageUploadProps) => {
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
+
+const getBase64 = (file: FileType): Promise<string> =>
+   new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = (error) => reject(error)
+   })
+
+const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
    const [loading, setLoading] = useState(false)
+   const [imageUrl, setImageUrl] = useState<string | null>(defaultImage || null)
 
    const handleChange: UploadProps['onChange'] = async (info) => {
       setLoading(true)
       const files = info.fileList.map((file) => file.originFileObj)
       if (files && files.length > 0) {
          const file = files[files.length - 1]
-         const imageUrl = await imageUpload(file as File, 'user-profile')
+         setImage(file as File)
+
+         const imageUrl = await getBase64(file as FileType)
          setImageUrl(imageUrl)
       }
       setLoading(false)

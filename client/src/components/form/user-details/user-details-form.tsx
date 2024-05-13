@@ -13,6 +13,8 @@ import { MdAlternateEmail } from 'react-icons/md'
 import { CgNametag } from 'react-icons/cg'
 import { MdDoneAll } from 'react-icons/md'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { imageUpload } from '@/utils/uploadImage'
+
 interface AddUserDetailsFormProps {
    userData: any
 }
@@ -20,9 +22,7 @@ interface AddUserDetailsFormProps {
 export default function AddUserDetailsForm({
    userData,
 }: AddUserDetailsFormProps) {
-   const [imageUrl, setImageUrl] = useState<string>(
-      userData?.profilePicture || '',
-   )
+   const [image, setImage] = useState<File | null>(null)
    const [formData, setFormData] = useState({
       username: userData.username || '',
       email: userData.email || '',
@@ -44,6 +44,7 @@ export default function AddUserDetailsForm({
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      const imageUrl = image ? await imageUpload(image, 'profile') : null
       const formDataWithImage = {
          ...formData,
          profilePicture: imageUrl,
@@ -74,8 +75,8 @@ export default function AddUserDetailsForm({
                <Tooltip title="Upload Profile Picture">
                   <div className="absolute  top-[12rem]">
                      <ImageUpload
-                        imageUrl={imageUrl}
-                        setImageUrl={setImageUrl}
+                        setImage={setImage}
+                        defaultImage={userData?.profilePicture}
                      />
                   </div>
                </Tooltip>
