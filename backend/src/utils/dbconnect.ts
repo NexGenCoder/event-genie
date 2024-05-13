@@ -1,5 +1,6 @@
-import { createPool, Pool, PoolConfig } from 'mariadb'
 import dotenv from 'dotenv'
+import { createPool, Pool, PoolConfig } from 'mariadb'
+
 dotenv.config()
 
 const poolConfig: PoolConfig = {

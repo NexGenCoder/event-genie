@@ -23,7 +23,6 @@ const createUsersTable = async () => {
             isAccountSuspended BIT DEFAULT 0
          )
       `)
-
    } catch (error) {
       console.error('Error creating users table:', error)
    } finally {

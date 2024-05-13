@@ -1,5 +1,6 @@
-import CompleteProfile from '@/components/form/user-details'
 import React from 'react'
+
+import CompleteProfile from '@/components/form/edit-user-details'
 
 function CompleteProfilePage() {
    return <CompleteProfile />

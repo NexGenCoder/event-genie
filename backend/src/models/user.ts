@@ -1,5 +1,6 @@
 import { IUser } from 'types/user'
-import { pool } from './../utils/dbconnect'
+
+import { pool } from '../utils/dbconnect'
 
 export const getUserByUsernameModel = async (username: string) => {
    const conn = await pool.getConnection()

@@ -1,16 +1,17 @@
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
+import cookieSession from 'cookie-session'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import cookieSession from 'cookie-session'
 import http from 'http'
+
+import createOtpsTable from './migrations/create_otps_table'
+import createUsersTable from './migrations/create_users_table'
 import router from './routes'
 import passport from './services/passport'
 import { pool } from './utils/dbconnect'
-import createUsersTable from './migrations/create_users_table'
-import createOtpsTable from './migrations/create_otps_table'
 
 dotenv.config()
 const PORT = process.env.PORT

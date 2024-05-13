@@ -1,6 +1,8 @@
 'use client'
-import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
 import React from 'react'
+
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
+
 import AddUserDetailsForm from './user-details-form'
 
 function CompleteProfile() {

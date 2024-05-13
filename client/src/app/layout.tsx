@@ -1,11 +1,13 @@
 'use client'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/navbar'
+
+import { Inter } from 'next/font/google'
 import { Provider } from 'react-redux'
 
 import { store } from '@/app/store'
+import Navbar from '@/components/navbar'
+
 const inter = Inter({ subsets: ['latin'] })
 
 const rtkStore = store()

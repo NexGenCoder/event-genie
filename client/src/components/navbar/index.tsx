@@ -1,13 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
-import { IoLogIn, IoLogOut, IoSearch } from 'react-icons/io5'
-import { IoMdArrowDropdown } from 'react-icons/io'
-import LogoImage from '../../../public/OccasionGuru.jpeg'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
+import { IoLogIn } from 'react-icons/io5'
+
 import { useLogoutMutation } from '@/app/services/authApi'
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
-import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
+
+import LogoImage from '../../../public/OccasionGuru.jpeg'
+import LoginModal from '../form/login-modal'
+import ProfileDropdown from './profile-dropdown'
 import NavUserProfile from './user-profile'
 import NavUserProfileShimmer from './user-profile-shimmer'
 
@@ -15,6 +18,16 @@ function Navbar() {
    const { isLoggedin, data, isLoading } = useIsAuthenticated()
    const [logout] = useLogoutMutation()
    const router = useRouter()
+
+   const [isModalOpen, setIsModalOpen] = useState(false)
+
+   const showModal = () => {
+      setIsModalOpen(true)
+   }
+
+   const handleCancel = () => {
+      setIsModalOpen(false)
+   }
    const handleLogout = async () => {
       try {
          const response = await logout()
@@ -26,7 +39,7 @@ function Navbar() {
       }
    }
    return (
-      <nav className="w-full sticky top-0  z-50 px-8 p-4 mx-auto flex justify-between bg text-white ">
+      <nav className="w-full sticky top-0 z-50 px-8 p-2 flex justify-between shadow bg-white  ">
          <div className="flex gap-6  ">
             <Link href="/" className="flex items-center text-md gap-2  ">
                <Image
@@ -60,7 +73,7 @@ function Navbar() {
                </Link>
             </nav>
          </div>
-         <nav className="flex gap-2 text-sm items-center">
+         <div className="flex gap-2 text-sm items-center">
             {isLoading ? (
                <NavUserProfileShimmer />
             ) : (
@@ -68,24 +81,27 @@ function Navbar() {
                   {isLoggedin ? (
                      <>
                         {data && (
-                           <NavUserProfile
-                              profilePicture={data.profilePicture}
-                              firstName={data.firstName}
-                           />
+                           <ProfileDropdown>
+                              <NavUserProfile
+                                 profilePicture={data.profilePicture}
+                                 firstName={data.firstName}
+                              />
+                           </ProfileDropdown>
                         )}
                      </>
                   ) : (
-                     <Link
-                        href="/login"
-                        className="flex justify-center items-center gap-2 py-2 px-5 rounded-full bg-[#c73d75] hover:bg-[#B4245D]"
+                     <button
+                        className="flex justify-center items-center gap-2 py-2 px-5 border rounded bg-gray-200 hover:bg-gray-300"
+                        onClick={showModal}
                      >
                         <IoLogIn className="hidden md:block text-xl" />
                         <span>Login</span>
-                     </Link>
+                     </button>
                   )}
                </>
             )}
-         </nav>
+         </div>
+         <LoginModal isModalOpen={isModalOpen} handleCancel={handleCancel} />
       </nav>
    )
 }

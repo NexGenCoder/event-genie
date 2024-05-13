@@ -1,19 +1,18 @@
 import express from 'express'
-import { IUser, IOtp } from 'types/user'
-
-import passport from '../services/passport'
-import { generateJWT } from '../utils/auth'
-import {
-   getUserByUserIdModel,
-   createUserIfNotExistsModel,
-   updateUserProfileModel,
-} from '../models/user'
+import { IOtp, IUser } from 'types/user'
 
 import {
    addOtpModel,
    getOtpByMobileNumberModel,
    verifyOtpModel,
 } from '../models/otp'
+import {
+   createUserIfNotExistsModel,
+   getUserByUserIdModel,
+   updateUserProfileModel,
+} from '../models/user'
+import passport from '../services/passport'
+import { generateJWT } from '../utils/auth'
 
 /**
  * Get self user data from token
@@ -181,7 +180,7 @@ export const logoutController = async (
       }
 
       res.clearCookie('OG-AUTH')
-      return res.redirect('/')
+      return res.redirect('http://localhost:3000/')
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })

@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { PlusOutlined } from '@ant-design/icons'
 import { Upload } from 'antd'
-import type { GetProp, UploadProps } from 'antd'
 import Image from 'next/image'
+import React, { useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+
+import { PlusOutlined } from '@ant-design/icons'
+
+import type { GetProp, UploadProps } from 'antd'
 interface ImageUploadProps {
    setImage: React.Dispatch<React.SetStateAction<File | null>>
    defaultImage?: string
@@ -54,7 +56,7 @@ const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
             listType="picture-circle"
             style={{ width: '200px', height: '200px' }}
             showUploadList={false}
-            className="bg-white rounded-full flex justify-center items-center w-[200px] h-[200px]"
+            className="bg-white rounded-full flex justify-center items-center w-[200px] h-[200px] "
             onChange={handleChange}
          >
             {imageUrl ? (
@@ -63,7 +65,7 @@ const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
                   height={200}
                   src={imageUrl}
                   alt="avatar"
-                  className="rounded-full w-[200px] h-[200px] object-cover"
+                  className="rounded-full w-[200px] h-[200px] object-cover border-2 border-gray-500 shadow-lg"
                />
             ) : (
                uploadButton

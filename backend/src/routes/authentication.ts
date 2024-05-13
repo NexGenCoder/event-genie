@@ -1,20 +1,20 @@
 import express from 'express'
 
 import {
+   getSelfController,
    googleAuthCallbackController,
    googleAuthController,
-   sendOTPController,
-   verifyOTPController,
-   updateUserDetailsController,
-   getSelfController,
    logoutController,
+   sendOTPController,
+   updateUserDetailsController,
+   verifyOTPController,
 } from '../controller/authentication'
 import {
+   addUserDetailsValidator,
    sendOtpValidator,
    verifyOtpValidator,
-   addUserDetailsValidator,
-} from './../middlewares/authentication'
-import { authinticate } from './../middlewares/authinticate'
+} from '../middlewares/authentication'
+import { authinticate } from '../middlewares/authinticate'
 
 export default (router: express.Router) => {
    router.post('/auth/send-otp', sendOtpValidator, sendOTPController)
@@ -26,7 +26,7 @@ export default (router: express.Router) => {
       updateUserDetailsController,
    )
    router.get('/auth/self', authinticate, getSelfController)
-   router.post('/auth/logout', authinticate, logoutController)
+   router.get('/auth/logout', authinticate, logoutController)
    router.get('/auth/google', googleAuthController)
    router.get('/auth/google/callback', googleAuthCallbackController)
 }

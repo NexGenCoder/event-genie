@@ -1,5 +1,6 @@
 import { IOtp } from 'types/user'
-import { pool } from './../utils/dbconnect'
+
+import { pool } from '../utils/dbconnect'
 
 export const addOtpModel = async (otp: IOtp) => {
    const conn = await pool.getConnection()

@@ -6,20 +6,6 @@ body::-webkit-scrollbar {
    display: none;
 }
 
-body,
-.bg {
-   background: #ff0084;
-   background: -webkit-linear-gradient(to right, #33001b, #ff0084);
-   background: linear-gradient(to right, #33001b, #ff0084);
-   color: white;
-}
-
-.bg-rev {
-   background: #ff0084;
-   background: -webkit-linear-gradient(to right, #ff0084, #33001b);
-   background: linear-gradient(to right, #ff0084, #33001b);
-}
-
 @layer utilities {
    .no-scrollbar::-webkit-scrollbar {
       display: none;
