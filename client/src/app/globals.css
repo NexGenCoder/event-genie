@@ -30,3 +30,11 @@ body::-webkit-scrollbar {
    height: 200px !important;
    width: 200px !important;
 }
+
+@media (max-width: 768px) {
+   .ant-upload,
+   .ant-upload-select {
+      height: 150px !important;
+      width: 150px !important;
+   }
+}

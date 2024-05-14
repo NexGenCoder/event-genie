@@ -1,9 +1,9 @@
 'use client'
-import { Button, Input, InputNumber } from 'antd'
-import Link from 'next/link'
+import { Button, Flex, Input, InputNumber, theme, Typography } from 'antd'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+import { CiEdit } from 'react-icons/ci'
 import { FcGoogle } from 'react-icons/fc'
 import { IoMdLogIn } from 'react-icons/io'
 import { MdOutlineSendToMobile } from 'react-icons/md'
@@ -16,6 +16,7 @@ import { API } from '@/constants'
 
 import { CountrySelector } from './country-selector'
 
+const { Link, Text } = Typography
 import type { GetProp } from 'antd'
 import type { OTPProps } from 'antd/es/input/OTP'
 function LoginForm() {
@@ -23,6 +24,10 @@ function LoginForm() {
    const [formData, setFormData] = useState({ mobile: '' })
    const [otp, setOtp] = useState<string>('')
    const [showOtp, setShowOtp] = useState(false)
+
+   const {
+      token: { colorTextBase },
+   } = theme.useToken()
 
    const [sendOtp, { isLoading: isSendingOtp, data: sendOtpResponse }] =
       useSendOtpMutation()
@@ -95,13 +100,13 @@ function LoginForm() {
          <div className="flex flex-col gap-2">
             {!showOtp ? (
                <div className="flex flex-col gap-4 w-full">
-                  <label
-                     htmlFor="mobile"
-                     className="block text-md font-medium "
+                  <Text
+                     style={{ color: colorTextBase }}
+                     className="block text-md font-medium"
                   >
                      Mobile Number
-                  </label>
-                  <div className="flex flex-col gap-4 items-center w-full">
+                  </Text>
+                  <Flex gap="middle" vertical align="center">
                      <InputNumber
                         addonBefore={<CountrySelector />}
                         id="mobile"
@@ -118,6 +123,7 @@ function LoginForm() {
                      />
                      <Button
                         type="primary"
+                        className="flex justify-center items-center gap-2"
                         icon={<MdOutlineSendToMobile />}
                         loading={isSendingOtp}
                         size="large"
@@ -125,28 +131,29 @@ function LoginForm() {
                      >
                         Send OTP
                      </Button>
-                  </div>
+                  </Flex>
                </div>
             ) : (
                <>
-                  <div className="flex flex-col gap-4 items-center w-full">
-                     <div className="w-full justify-center text-center">
-                        <span>OTP sent to</span>
-                        <span className="italic">+91 {formData.mobile}</span>
+                  <Flex gap="middle" vertical align="center">
+                     <Flex gap="middle" justify="center">
+                        <Text>OTP sent to</Text>
                         <button
                            type="button"
-                           className="ml-2 underline"
+                           title="Change Mobile Number"
                            onClick={() => setShowOtp(false)}
+                           className="flex items-center gap-2"
                         >
-                           Change
+                           <span className="italic">+91 {formData.mobile}</span>
+                           <CiEdit />
                         </button>
-                     </div>
-                     <label
-                        htmlFor="otp"
+                     </Flex>
+                     <Text
+                        style={{ color: colorTextBase }}
                         className="block text-sm font-medium  w-full"
                      >
                         Enter OTP
-                     </label>
+                     </Text>
                      <Input.OTP
                         size="large"
                         formatter={(str) => str.toUpperCase()}
@@ -154,6 +161,7 @@ function LoginForm() {
                      />
 
                      <Button
+                        className="flex justify-center items-center gap-2 "
                         type="primary"
                         icon={<IoMdLogIn />}
                         loading={isOtpVerifying}
@@ -162,24 +170,25 @@ function LoginForm() {
                      >
                         Sign In
                      </Button>
-                  </div>
+                  </Flex>
                </>
             )}
          </div>
 
-         <div className="flex items-center gap-4">
+         <div className="flex items-center gap-4 my-8">
             <hr className="flex-1" />
             <span className="font-semibold">OR</span>
             <hr className="flex-1" />
          </div>
 
          <div className="flex flex-col justify-center items-center gap-4">
-            <p className="text-center md:text-2xl text-md font-semibold">
+            <Text className="md:text-lg text-md font-semibold">
                Continue with your social account
-            </p>
+            </Text>
             <Link
-               className="flex justify-center item-center bg-gray-100 border py-2 px-4 rounded-md hover:bg-gray-200  items-center gap-2 text-black w-fit"
+               className="flex justify-center item-center bg--100 border py-2 px-4 rounded-md hover:bg-gray-200  items-center gap-2 text-black w-fit"
                href={`${API}/auth/google`}
+               style={{ color: colorTextBase }}
             >
                <FcGoogle className="inline-block mr-2" /> Sign In With Google
             </Link>

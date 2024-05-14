@@ -1,13 +1,12 @@
-import { Dropdown, Space } from 'antd'
-import Link from 'next/link'
+import { Dropdown, Typography } from 'antd'
 import React from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { CiSettings } from 'react-icons/ci'
 import { RiLogoutCircleRLine } from 'react-icons/ri'
 
 import { API } from '@/constants'
-import { DownOutlined, SmileOutlined } from '@ant-design/icons'
 
+const { Link } = Typography
 import type { MenuProps } from 'antd'
 const items: MenuProps['items'] = [
    {
@@ -15,7 +14,7 @@ const items: MenuProps['items'] = [
       label: (
          <Link
             href="/edit-profile"
-            className="text-black py-1 px-4  flex items-center gap-2 "
+            className=" py-1 px-4  flex items-center gap-2 "
          >
             <CgProfile className="inline-block" />
             Profile
@@ -27,7 +26,7 @@ const items: MenuProps['items'] = [
       label: (
          <Link
             href="/settings"
-            className="text-black py-1 px-4  flex items-center gap-2 "
+            className=" py-1 px-4  flex items-center gap-2 "
          >
             <CiSettings className="inline-block" />
             Settings
@@ -39,7 +38,7 @@ const items: MenuProps['items'] = [
       label: (
          <Link
             href={`${API}/auth/logout`}
-            className="text-black py-1 px-4  flex items-center gap-2 "
+            className=" py-1 px-4  flex items-center gap-2 "
          >
             <RiLogoutCircleRLine className="inline-block" />
             Logout

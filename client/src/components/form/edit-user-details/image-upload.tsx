@@ -54,18 +54,18 @@ const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
          <Upload
             name="avatar"
             listType="picture-circle"
-            style={{ width: '200px', height: '200px' }}
             showUploadList={false}
-            className="bg-white rounded-full flex justify-center items-center w-[200px] h-[200px] "
+            className="bg-white rounded-full flex justify-center items-center md:w-[200px] w-[150px] md:h-[200px] h-[150px] "
             onChange={handleChange}
          >
             {imageUrl ? (
                <Image
-                  width={200}
-                  height={200}
+                  width={500}
+                  height={500}
                   src={imageUrl}
+                  quality={100}
                   alt="avatar"
-                  className="rounded-full w-[200px] h-[200px] object-cover border-2 border-gray-500 shadow-lg"
+                  className="rounded-full md:w-[200px] w-[150px] md:h-[200px] h-[150px] object-cover border-2 border-gray-500 shadow-lg"
                />
             ) : (
                uploadButton

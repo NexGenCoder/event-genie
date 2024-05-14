@@ -1,6 +1,8 @@
 'use client'
-import { Button, Input, Tooltip } from 'antd'
+import { Button, Flex, Input, Layout, Tooltip } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import Text from 'antd/es/typography/Text'
+import Title from 'antd/es/typography/Title'
 import { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { CgNametag } from 'react-icons/cg'
@@ -62,30 +64,36 @@ export default function AddUserDetailsForm({
    }
 
    return (
-      <section className="flex lg:flex-row flex-col justify-center min-h-[88vh] p-6 ">
-         <form
-            className="flex flex-col  w-full justify-center shadow-md  rounded-[20px]"
-            onSubmit={handleSubmit}
+      <Layout className="flex lg:flex-row flex-col justify-center p-6 ">
+         <Flex
+            className="w-full shadow-md"
+            gap="middle"
+            justify="center"
+            align="center"
          >
-            <div className="flex flex-col gap-4 items-center justify-center p-4">
-               <h1 className=" text-2xl font-bold text-center p-4">
-                  Update Your Profile
-               </h1>
+            <Flex
+               gap="middle"
+               vertical
+               align="center"
+               justify="center"
+               className="w-full p-4"
+            >
+               <Title>Update Your Profile</Title>
                <Tooltip title="Upload Profile Picture">
-                  <div className="absolute  top-[12rem]">
+                  <div className="absolute md:top-[12rem] top-[13rem]">
                      <ImageUpload
                         setImage={setImage}
                         defaultImage={userData?.profilePicture}
                      />
                   </div>
                </Tooltip>
-               <div className="md:w-[70%] w-full flex flex-col gap-6 pt-28 border-2 border-gray-500 p-8 bg-slate-200 rounded-xl mt-28">
+               <div className="md:w-[70%] w-full flex flex-col gap-6 md:pt-28 pt-20 border-2 border-gray-500 p-8  rounded-xl mt-28">
                   <div className="flex gap-4">
                      <div className="flex flex-col gap-2 w-[50%]">
-                        <label className="">
+                        <Text className="">
                            First Name
                            <span className="text-red-500">*</span>
-                        </label>
+                        </Text>
                         <Input
                            name="firstName"
                            value={formData.firstName}
@@ -100,7 +108,7 @@ export default function AddUserDetailsForm({
                         />
                      </div>
                      <div className="flex flex-col gap-2 w-[50%]">
-                        <label className="">Last Name</label>
+                        <Text className="">Last Name</Text>
                         <Input
                            name="lastName"
                            value={formData.lastName}
@@ -116,9 +124,9 @@ export default function AddUserDetailsForm({
                      </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                     <label className="">
+                     <Text className="">
                         Username<span className="text-red-500">*</span>
-                     </label>
+                     </Text>
                      <Input
                         name="username"
                         value={formData.username}
@@ -140,9 +148,9 @@ export default function AddUserDetailsForm({
                      />
                   </div>
                   <div className="flex flex-col gap-2">
-                     <label className="">
+                     <Text className="">
                         Email<span className="text-red-500">*</span>
-                     </label>
+                     </Text>
                      <Input
                         type="email"
                         name="email"
@@ -163,7 +171,7 @@ export default function AddUserDetailsForm({
                      />
                   </div>
                   <div className="flex flex-col gap-2">
-                     <label className="">About You</label>
+                     <Text className="">About You</Text>
                      <TextArea
                         rows={4}
                         placeholder="Enter something about yourself"
@@ -190,9 +198,9 @@ export default function AddUserDetailsForm({
                      </Button>
                   </div>
                </div>
-            </div>
-         </form>
+            </Flex>
+         </Flex>
          <Toaster />
-      </section>
+      </Layout>
    )
 }

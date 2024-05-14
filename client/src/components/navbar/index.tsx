@@ -1,5 +1,6 @@
+import { Button, Flex, Switch, theme, Typography } from 'antd'
+import { Header } from 'antd/es/layout/layout'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -14,7 +15,12 @@ import ProfileDropdown from './profile-dropdown'
 import NavUserProfile from './user-profile'
 import NavUserProfileShimmer from './user-profile-shimmer'
 
-function Navbar() {
+const { Link } = Typography
+interface NavbarProps {
+   setIsDarkMode: (isDarkMode: boolean) => void
+}
+
+function Navbar({ setIsDarkMode }: NavbarProps) {
    const { isLoggedin, data, isLoading } = useIsAuthenticated()
    const [logout] = useLogoutMutation()
    const router = useRouter()
@@ -30,7 +36,7 @@ function Navbar() {
    }
    const handleLogout = async () => {
       try {
-         const response = await logout()
+         await logout()
          toast.success('Logged out successfully', { position: 'top-right' })
          router.push('/login')
       } catch (error) {
@@ -38,10 +44,20 @@ function Navbar() {
          console.error(error)
       }
    }
+   const {
+      token: { colorBgContainer, colorTextBase },
+   } = theme.useToken()
    return (
-      <nav className="w-full sticky top-0 z-50 px-8 p-2 flex justify-between shadow bg-white  ">
-         <div className="flex gap-6  ">
-            <Link href="/" className="flex items-center text-md gap-2  ">
+      <Header
+         className="w-full sticky top-0 z-50 px-8 py-2 flex justify-between shadow"
+         style={{ backgroundColor: colorBgContainer }}
+      >
+         <Flex gap="middle">
+            <Link
+               href="/"
+               className="flex items-center text-md gap-2"
+               style={{ color: colorTextBase }}
+            >
                <Image
                   src={LogoImage}
                   width={35}
@@ -49,30 +65,34 @@ function Navbar() {
                   alt="Occasion Guru Logo"
                   className="rounded-full"
                />
-
-               <span>Occasion Guru</span>
+               Occasion Guru
             </Link>
-            <nav className="md:flex items-center   text-sm hidden ">
+            <nav className="md:flex items-center text-sm hidden ">
                <Link
                   href="/"
+                  title="Home"
                   className="flex justify-center items-center  gap-2 py-2 px-5"
+                  style={{ color: colorTextBase }}
                >
                   Home
                </Link>
                <Link
-                  href="/secret"
+                  href="/vendors"
+                  title="Vendors"
                   className="flex justify-center items-center  gap-2 py-2 px-5"
+                  style={{ color: colorTextBase }}
                >
                   Vendors
                </Link>
                <Link
                   href="/profile"
                   className="flex justify-center items-center  gap-2 py-2 px-5"
+                  style={{ color: colorTextBase }}
                >
                   Events
                </Link>
             </nav>
-         </div>
+         </Flex>
          <div className="flex gap-2 text-sm items-center">
             {isLoading ? (
                <NavUserProfileShimmer />
@@ -90,19 +110,27 @@ function Navbar() {
                         )}
                      </>
                   ) : (
-                     <button
-                        className="flex justify-center items-center gap-2 py-2 px-5 border rounded bg-gray-200 hover:bg-gray-300"
-                        onClick={showModal}
-                     >
-                        <IoLogIn className="hidden md:block text-xl" />
-                        <span>Login</span>
-                     </button>
+                     <>
+                        <Button
+                           className=" py-2 px-5 flex items-center gap-2"
+                           onClick={showModal}
+                           icon={<IoLogIn />}
+                        >
+                           Login
+                        </Button>
+                        <Switch
+                           checkedChildren="🌞"
+                           unCheckedChildren="🌜"
+                           defaultChecked
+                           onChange={(checked) => setIsDarkMode(checked)}
+                        />
+                     </>
                   )}
                </>
             )}
          </div>
          <LoginModal isModalOpen={isModalOpen} handleCancel={handleCancel} />
-      </nav>
+      </Header>
    )
 }
 

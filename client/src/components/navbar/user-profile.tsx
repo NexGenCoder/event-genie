@@ -1,9 +1,11 @@
-import { Avatar, Space } from 'antd'
+import { Avatar, Space, Typography } from 'antd'
 import Image from 'next/image'
 import React from 'react'
 import { RiArrowDownWideLine } from 'react-icons/ri'
 
 import { UserOutlined } from '@ant-design/icons'
+
+const { Text, Link } = Typography
 
 interface NavUserProfileProps {
    profilePicture: string
@@ -25,7 +27,9 @@ function NavUserProfile({ profilePicture, firstName }: NavUserProfileProps) {
             }
          />
 
-         <span className="text-lg">{firstName}</span>
+         <Text strong className="text-lg">
+            {firstName}
+         </Text>
 
          <RiArrowDownWideLine size={22} />
       </button>
