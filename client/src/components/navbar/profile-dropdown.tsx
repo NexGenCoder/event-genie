@@ -1,4 +1,5 @@
 import { Dropdown, Typography } from 'antd'
+import Link from 'next/link'
 import React from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { CiSettings } from 'react-icons/ci'
@@ -6,7 +7,6 @@ import { RiLogoutCircleRLine } from 'react-icons/ri'
 
 import { API } from '@/constants'
 
-const { Link } = Typography
 import type { MenuProps } from 'antd'
 const items: MenuProps['items'] = [
    {

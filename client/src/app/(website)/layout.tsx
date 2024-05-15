@@ -21,7 +21,7 @@ export default function RootLayout({
    const isSystemDarkMode = window.matchMedia(
       '(prefers-color-scheme: dark)',
    ).matches
-   const [isDarkMode, setIsDarkMode] = useState(isSystemDarkMode)
+   const [isDarkMode, setIsDarkMode] = useState(false)
 
    return (
       <html lang="en">

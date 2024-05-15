@@ -1,6 +1,7 @@
 import { Button, Flex, Switch, theme, Typography } from 'antd'
 import { Header } from 'antd/es/layout/layout'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -10,12 +11,11 @@ import { useLogoutMutation } from '@/app/services/authApi'
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated'
 
 import LogoImage from '../../../public/OccasionGuru.jpeg'
-import LoginModal from '../form/login-modal'
+import LoginModal from '../login/login-modal'
 import ProfileDropdown from './profile-dropdown'
 import NavUserProfile from './user-profile'
 import NavUserProfileShimmer from './user-profile-shimmer'
 
-const { Link } = Typography
 interface NavbarProps {
    setIsDarkMode: (isDarkMode: boolean) => void
 }

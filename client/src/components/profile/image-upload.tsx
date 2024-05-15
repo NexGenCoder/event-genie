@@ -55,7 +55,7 @@ const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
             name="avatar"
             listType="picture-circle"
             showUploadList={false}
-            className="bg-white rounded-full flex justify-center items-center md:w-[200px] w-[150px] md:h-[200px] h-[150px] "
+            className="bg-white rounded-full flex justify-center items-center md:w-[150px] w-[120px] md:h-[150px] h-[120px] "
             onChange={handleChange}
          >
             {imageUrl ? (
@@ -65,7 +65,7 @@ const ImageUpload = ({ setImage, defaultImage }: ImageUploadProps) => {
                   src={imageUrl}
                   quality={100}
                   alt="avatar"
-                  className="rounded-full md:w-[200px] w-[150px] md:h-[200px] h-[150px] object-cover border-2 border-gray-500 shadow-lg"
+                  className="rounded-full md:w-[150px] w-[120px] md:h-[150px] h-[120px] object-cover border-2 border-gray-500 shadow-lg"
                />
             ) : (
                uploadButton
