@@ -186,7 +186,7 @@ export const getAllUsers = async () => {
    }
 }
 
-export const checkIfUsernameExists = async (username: string) => {
+export const checkIfUsernameExistsModel = async (username: string) => {
    const conn = await pool.getConnection()
    try {
       const result = await conn.query('SELECT * FROM USERS WHERE username=?', [

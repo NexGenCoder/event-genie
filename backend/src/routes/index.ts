@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 
 import authentication from './authentication'
+import user from './user'
 
 const router = express.Router()
 /**
@@ -19,5 +20,6 @@ router.get('/', (req: Request, res: Response) => {
 
 export default (): express.Router => {
    authentication(router)
+   user(router)
    return router
 }
