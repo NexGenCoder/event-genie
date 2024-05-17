@@ -185,3 +185,17 @@ export const getAllUsers = async () => {
       conn.release()
    }
 }
+
+export const checkIfUsernameExists = async (username: string) => {
+   const conn = await pool.getConnection()
+   try {
+      const result = await conn.query('SELECT * FROM USERS WHERE username=?', [
+         username,
+      ])
+      return result[0]
+   } catch (error) {
+      throw new Error(`Error checking username: ${error}`)
+   } finally {
+      conn.release()
+   }
+}
