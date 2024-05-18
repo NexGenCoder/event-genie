@@ -45,6 +45,9 @@ type IUserResponse = {
    }
 }
 
+type ICheckusernameResponse = {
+   exists: boolean
+}
 export const authApi = api.injectEndpoints({
    endpoints: (builder) => ({
       getSelf: builder.query<IUserResponse, void>({
@@ -82,6 +85,13 @@ export const authApi = api.injectEndpoints({
          }),
          invalidatesTags: ['Logout'],
       }),
+      checkusername: builder.query<ICheckusernameResponse, string>({
+         query: (searchString) => ({
+            url: `/user/exists/${searchString}`,
+            method: 'GET',
+         }),
+         providesTags: ['CheckUsername'],
+      }),
    }),
 })
 export const {
@@ -90,4 +100,5 @@ export const {
    useLogoutMutation,
    useAddUserDetailsMutation,
    useGetSelfQuery,
+   useCheckusernameQuery,
 } = authApi

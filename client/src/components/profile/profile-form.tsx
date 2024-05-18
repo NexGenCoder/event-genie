@@ -11,9 +11,11 @@ import { MdAlternateEmail, MdDoneAll } from 'react-icons/md'
 import {
    useAddUserDetailsMutation,
    useGetSelfQuery,
+   useCheckusernameQuery,
 } from '@/app/services/authApi'
 import { imageUpload } from '@/utils/uploadImage'
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons'
+import { useDebounce } from '@/hooks/useDebounce'
 
 import ImageUpload from './image-upload'
 
@@ -33,11 +35,22 @@ export default function AddUserDetailsForm({
       bio: userData.bio || '',
    })
 
+   const [skip, setSkip] = useState(true)
+   const debouncedUsername = useDebounce(formData.username, 500)
+   const { data } = useCheckusernameQuery(debouncedUsername, { skip: skip })
+
    const [addUserDetails, { isLoading: isAddingUserDetails }] =
       useAddUserDetailsMutation()
    const queryClient = useGetSelfQuery()
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
+      if (name === 'username') {
+         if (value.length === 0) {
+            setSkip(true)
+         } else {
+            setSkip(false)
+         }
+      }
       setFormData((prevData) => ({
          ...prevData,
          [name]: value,
@@ -138,6 +151,9 @@ export default function AddUserDetailsForm({
                      </Tooltip>
                   }
                />
+               {data?.exists && formData.username != '' && (
+                  <span className="text-red-500">Username exists already!</span>
+               )}
             </div>
             <div className="flex flex-col gap-2">
                <Text className="">
@@ -185,6 +201,7 @@ export default function AddUserDetailsForm({
                   loading={isAddingUserDetails}
                   size="large"
                   onClick={handleSubmit}
+                  disabled={data?.exists}
                >
                   Submit
                </Button>
