@@ -8,6 +8,13 @@ const baseQuery = fetchBaseQuery({
 
 export const api = createApi({
    baseQuery,
-   tagTypes: ['SendOtp', 'VerifyOtp', 'Logout', 'AddUserDetails', 'Self'],
+   tagTypes: [
+      'SendOtp',
+      'VerifyOtp',
+      'Logout',
+      'AddUserDetails',
+      'Self',
+      'CheckUsername',
+   ],
    endpoints: () => ({}),
 })

@@ -1,5 +1,5 @@
 import express from 'express'
-import { checkIfUsernameExistsModel } from '../models/user'
+import { getUserByUsernameModel } from '../models/user'
 
 /**
  * Verify OTP for Sign in or Sign up
@@ -12,8 +12,8 @@ export const checkIfUsernameExistsController = async (
    res: express.Response,
 ) => {
    try {
-      const { username } = req.body
-      const data = await checkIfUsernameExistsModel(username)
+      const { username } = req.params
+      const data = await getUserByUsernameModel(username)
       if (!data) {
          return res.status(200).json({ exists: false })
       }
