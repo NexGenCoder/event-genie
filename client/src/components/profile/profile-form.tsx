@@ -45,7 +45,11 @@ export default function AddUserDetailsForm({
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
       if (name === 'username') {
-         setSkip(false)
+         if (value.length === 0) {
+            setSkip(true)
+         } else {
+            setSkip(false)
+         }
       }
       setFormData((prevData) => ({
          ...prevData,
@@ -147,7 +151,7 @@ export default function AddUserDetailsForm({
                      </Tooltip>
                   }
                />
-               {data?.exists && (
+               {data?.exists && formData.username != '' && (
                   <span className="text-red-500">Username exists already!</span>
                )}
             </div>
