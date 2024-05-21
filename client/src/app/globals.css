@@ -6,6 +6,10 @@ body::-webkit-scrollbar {
    display: none;
 }
 
+body {
+   margin: 0;
+}
+
 @layer utilities {
    .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -27,15 +31,15 @@ body::-webkit-scrollbar {
 
 .ant-upload,
 .ant-upload-select {
-   height: 150px !important;
-   width: 150px !important;
+   height: 120px !important;
+   width: 120px !important;
 }
 
 @media (max-width: 768px) {
    .ant-upload,
    .ant-upload-select {
-      height: 120px !important;
-      width: 120px !important;
+      height: 100px !important;
+      width: 100px !important;
    }
 }
 

@@ -2,7 +2,6 @@
 import { Button, Flex, Input, Tooltip } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import Text from 'antd/es/typography/Text'
-import Title from 'antd/es/typography/Title'
 import { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { CgNametag } from 'react-icons/cg'
@@ -16,8 +15,7 @@ import {
 import { imageUpload } from '@/utils/uploadImage'
 import { InfoCircleOutlined, UserOutlined } from '@ant-design/icons'
 import { useDebounce } from '@/hooks/useDebounce'
-
-import ImageUpload from './image-upload'
+import ImageUpload from '@/components/profile/image-upload'
 
 interface AddUserDetailsFormProps {
    userData: any
@@ -82,7 +80,7 @@ export default function AddUserDetailsForm({
          vertical
          align="center"
          justify="center"
-         className="w-full relative"
+         className="w-full relative overflow-y-auto h-full"
       >
          <Tooltip title="Upload Profile Picture">
             <div className="absolute  md:top-[.5rem] top-[1rem]">
@@ -92,7 +90,7 @@ export default function AddUserDetailsForm({
                />
             </div>
          </Tooltip>
-         <div className="w-full flex flex-col gap-4 md:pt-[5rem] pt-[3rem] border-2 border-gray-500 p-4 md:p-8  rounded-xl mt-20">
+         <div className="w-full flex flex-col gap-4 md:pt-[5rem] pt-[3rem] p-4 md:p-8  rounded-xl mt-20">
             <div className="flex flex-col md:flex-row gap-4">
                <div className="flex flex-col gap-2 w-full">
                   <Text className="">
@@ -108,7 +106,7 @@ export default function AddUserDetailsForm({
                      status={formData.firstName ? '' : 'error'}
                      maxLength={20}
                      minLength={3}
-                     className="p-3 rounded-lg"
+                     className="p-2 rounded-lg"
                      prefix={<CgNametag className="mx-2" />}
                   />
                </div>
@@ -123,7 +121,7 @@ export default function AddUserDetailsForm({
                      status={formData.lastName ? '' : 'error'}
                      maxLength={20}
                      minLength={3}
-                     className="p-3 rounded-lg"
+                     className="p-2 rounded-lg"
                      prefix={<CgNametag className="mx-2" />}
                   />
                </div>
@@ -141,7 +139,7 @@ export default function AddUserDetailsForm({
                   status={formData.username ? '' : 'error'}
                   maxLength={20}
                   minLength={3}
-                  className="p-3 rounded-lg"
+                  className="p-2 rounded-lg"
                   prefix={<UserOutlined className="mx-2" />}
                   suffix={
                      <Tooltip title="Your username must be unique and between 3-20 characters">
@@ -167,7 +165,7 @@ export default function AddUserDetailsForm({
                   placeholder="Enter your email"
                   allowClear
                   status={formData.email ? '' : 'error'}
-                  className="p-3 rounded-lg"
+                  className="p-2 rounded-lg"
                   prefix={<MdAlternateEmail className="mx-2" />}
                   suffix={
                      <Tooltip title="Email must be unique and valid">
@@ -196,7 +194,6 @@ export default function AddUserDetailsForm({
             </div>
             <div className="flex justify-center">
                <Button
-                  type="primary"
                   icon={<MdDoneAll />}
                   loading={isAddingUserDetails}
                   size="large"
