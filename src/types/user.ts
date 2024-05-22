@@ -4,17 +4,17 @@ export interface IUser {
    firstname?: string
    lastname?: string
    email?: string
-   profilepicture?: string
-   googleId?: string
+   profile_picture?: string
+   googleid?: string
    bio?: string
-   createdAt?: Date
-   updatedAt?: Date
+   created_at?: Date
+   updated_at?: Date
    mobile?: string
-   isMobileVerified?: boolean
-   isEmailVerified?: boolean
-   isProfileCompleted?: boolean
-   isAccountDeleted?: boolean
-   isAccountSuspended?: boolean
+   is_mobile_verified?: boolean
+   is_email_verified?: boolean
+   is_profile_completed?: boolean
+   is_account_deleted?: boolean
+   is_account_suspended?: boolean
 }
 export interface IUserPayloadForToken {
    userid: number
@@ -22,9 +22,9 @@ export interface IUserPayloadForToken {
 
 export interface IOtp {
    mobile: string
-   countryCode: string
-   expiresAt?: Date
-   createdAt?: Date
+   country_code: string
+   expires_at?: Date
+   created_at?: Date
    otp?: string
-   isVerified?: boolean
+   is_verified?: boolean
 }

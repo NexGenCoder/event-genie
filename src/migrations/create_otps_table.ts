@@ -7,16 +7,15 @@ const createOtpsTable = async () => {
          CREATE TABLE IF NOT EXISTS otps (
             otpId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
             mobile VARCHAR(20) NOT NULL,
-            countryCode VARCHAR(5) NOT NULL,
-            expiresAt TIMESTAMPTZ,
-            createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            country_code VARCHAR(5) NOT NULL,
+            expires_at TIMESTAMPTZ,
+            created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             otp VARCHAR(6),
-            isVerified BOOLEAN DEFAULT FALSE,
+            is_verified BOOLEAN DEFAULT FALSE,
             userid UUID,
             FOREIGN KEY (userid) REFERENCES users(userid)
          )
       `)
-      console.log('OTPs table created successfully')
    } catch (error) {
       console.error('Error creating otps table: ', error)
    } finally {
