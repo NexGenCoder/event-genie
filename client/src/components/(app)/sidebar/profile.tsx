@@ -12,10 +12,10 @@ import { Layout, Menu, theme } from 'antd'
 import Link from 'next/link'
 
 interface ProfileSidebarProps {
-   userId: string
+   userid: string
 }
 
-const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
+const ProfileSidebar = ({ userid }: ProfileSidebarProps) => {
    const {
       token: { colorBgContainer, colorTextBase, colorBgTextHover, colorBgBlur },
    } = theme.useToken()
@@ -41,7 +41,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         key: 'view-profile',
                         icon: <CgProfile />,
                         label: (
-                           <Link href={`/app/${userId}/profile`}>
+                           <Link href={`/app/${userid}/profile`}>
                               View Profile
                            </Link>
                         ),
@@ -51,7 +51,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         icon: <FaUserEdit />,
                         label: (
                            <Link
-                              href={`/app/${userId}/profile?tab=edit-profile`}
+                              href={`/app/${userid}/profile?tab=edit-profile`}
                            >
                               Edit Profile
                            </Link>
@@ -68,7 +68,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         key: 'view-events',
                         icon: <FaCalendarAlt />,
                         label: (
-                           <Link href={`/app/${userId}/profile?tab=events`}>
+                           <Link href={`/app/${userid}/profile?tab=events`}>
                               View Events
                            </Link>
                         ),
@@ -78,7 +78,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         icon: <MdEvent />,
                         label: (
                            <Link
-                              href={`/app/${userId}/profile?tab=create-event`}
+                              href={`/app/${userid}/profile?tab=create-event`}
                            >
                               Create Event
                            </Link>
@@ -95,7 +95,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         key: 'change-theme',
                         icon: <RiBrush2Fill />,
                         label: (
-                           <Link href={`/app/${userId}/profile?tab=theme`}>
+                           <Link href={`/app/${userid}/profile?tab=theme`}>
                               Theme
                            </Link>
                         ),
@@ -111,7 +111,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         key: 'change-language',
                         icon: <MdLanguage />,
                         label: (
-                           <Link href={`/app/${userId}/profile?tab=language`}>
+                           <Link href={`/app/${userid}/profile?tab=language`}>
                               Language
                            </Link>
                         ),
@@ -120,7 +120,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         key: 'change-country',
                         icon: <IoEarth />,
                         label: (
-                           <Link href={`/app/${userId}/profile?tab=country`}>
+                           <Link href={`/app/${userid}/profile?tab=country`}>
                               Country
                            </Link>
                         ),
@@ -137,7 +137,7 @@ const ProfileSidebar = ({ userId }: ProfileSidebarProps) => {
                         icon: <TiUserDelete />,
                         label: (
                            <Link
-                              href={`/app/${userId}/profile?tab=delete-account`}
+                              href={`/app/${userid}/profile?tab=delete-account`}
                            >
                               Delete Account
                            </Link>

@@ -14,7 +14,7 @@ function UserHomePage({ params }: UserHomePageProps) {
    return (
       <Layout className="h-screen">
          <div className="flex w-[300px] h-full">
-            <Menus userId={params.userid} />
+            <Menus userid={params.userid} />
             <Sidebar />
          </div>
          <div className="w-full"></div>

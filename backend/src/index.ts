@@ -7,13 +7,14 @@ import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
 
-import createOtpsTable from './migrations/create_otps_table'
 import createUsersTable from './migrations/create_users_table'
 import router from './routes'
 import passport from './services/passport'
-import { pool } from './utils/dbconnect'
+import { createConnection } from './utils/dbconnect'
+import createOtpsTable from './migrations/create_otps_table'
 
 dotenv.config()
+
 const PORT = process.env.PORT
 
 const app = express()
@@ -46,16 +47,18 @@ server.listen(PORT, () => {
 })
 ;(async () => {
    try {
+      const client = await createConnection()
+
+      // Run migrations
       await createUsersTable()
       await createOtpsTable()
+
+      // Remember to close the connection when done
+      await client.end()
    } catch (error) {
       console.error('Error running migration:', error)
       process.exit(1)
    }
 })()
-pool.getConnection().then((conn) => {
-   console.log('Connected to the database')
-   conn.release()
-})
 
 app.use('/', router())

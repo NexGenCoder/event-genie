@@ -18,7 +18,7 @@ export const authinticate = async (
          return res.status(401).json({ error: 'Unauthorized' })
       }
 
-      res.locals.userId = payload.userId
+      res.locals.userid = payload.userid
       next()
    } catch (error) {
       return res.status(401).json({ error: 'Unauthorized' })

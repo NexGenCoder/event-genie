@@ -28,8 +28,8 @@ export default function AddUserDetailsForm({
    const [formData, setFormData] = useState({
       username: userData.username || '',
       email: userData.email || '',
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
+      firstname: userData.firstname || '',
+      lastname: userData.lastname || '',
       bio: userData.bio || '',
    })
 
@@ -59,7 +59,7 @@ export default function AddUserDetailsForm({
       const imageUrl = image ? await imageUpload(image, 'profile') : null
       const formDataWithImage = {
          ...formData,
-         profilePicture: imageUrl,
+         profilepicture: imageUrl,
       }
 
       try {
@@ -86,7 +86,7 @@ export default function AddUserDetailsForm({
             <div className="absolute  md:top-[.5rem] top-[1rem]">
                <ImageUpload
                   setImage={setImage}
-                  defaultImage={userData?.profilePicture}
+                  defaultImage={userData?.profilepicture}
                />
             </div>
          </Tooltip>
@@ -98,12 +98,12 @@ export default function AddUserDetailsForm({
                      <span className="text-red-500">*</span>
                   </Text>
                   <Input
-                     name="firstName"
-                     value={formData.firstName}
+                     name="firstname"
+                     value={formData.firstname}
                      onChange={handleChange}
                      placeholder="Enter your first name"
                      allowClear
-                     status={formData.firstName ? '' : 'error'}
+                     status={formData.firstname ? '' : 'error'}
                      maxLength={20}
                      minLength={3}
                      className="p-2 rounded-lg"
@@ -114,11 +114,11 @@ export default function AddUserDetailsForm({
                   <Text className="">Last Name</Text>
                   <Input
                      name="lastName"
-                     value={formData.lastName}
+                     value={formData.lastname}
                      onChange={handleChange}
                      placeholder="Enter your last name"
                      allowClear
-                     status={formData.lastName ? '' : 'error'}
+                     status={formData.lastname ? '' : 'error'}
                      maxLength={20}
                      minLength={3}
                      className="p-2 rounded-lg"

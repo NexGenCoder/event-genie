@@ -17,8 +17,8 @@ function UserHomePage({ params }: UserHomePageProps) {
       <Layout className="h-screen">
          <Flex className="h-full w-full">
             <Flex className="flex w-[300px] h-full ">
-               <Menus userId={params.userid} />
-               <ProfileSidebar userId={params.userid} />
+               <Menus userid={params.userid} />
+               <ProfileSidebar userid={params.userid} />
             </Flex>
             <UserAccount />
          </Flex>

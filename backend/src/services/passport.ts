@@ -35,17 +35,17 @@ passport.use(
                user = await createOrUpdateGoogleUserModel({
                   email: profile.email,
                   googleId: profile.id,
-                  profilePicture: profile.picture,
+                  profilepicture: profile.picture,
                })
                return done(null, user)
             }
 
             if (!user) {
                user = await createOrUpdateGoogleUserModel({
-                  firstName: profile.name.givenName,
+                  firstname: profile.name.givenName,
                   lastName: profile.name.familyName,
                   email: profile.emails ? profile.emails[0].value : '',
-                  profilePicture: profile.picture,
+                  profilepicture: profile.picture,
                   googleId: profile.id,
                })
             }
@@ -58,7 +58,7 @@ passport.use(
 )
 
 passport.serializeUser((user: IUser, done) => {
-   done(null, user.userId)
+   done(null, user.userid)
 })
 
 passport.deserializeUser(async (id: string, done) => {

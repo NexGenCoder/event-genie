@@ -1,25 +1,26 @@
-import { pool } from '../utils/dbconnect'
+import { createConnection } from '../utils/dbconnect'
 
 const createOtpsTable = async () => {
-   const conn = await pool.getConnection()
+   const client = await createConnection()
    try {
-      await conn.query(`
-         CREATE TABLE IF NOT EXISTS Otps (
-            otpId VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+      await client.query(`
+         CREATE TABLE IF NOT EXISTS otps (
+            otpId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
             mobile VARCHAR(20) NOT NULL,
             countryCode VARCHAR(5) NOT NULL,
-            expiresAt DATETIME,
-            createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+            expiresAt TIMESTAMPTZ,
+            createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             otp VARCHAR(6),
             isVerified BOOLEAN DEFAULT FALSE,
-            userId VARCHAR(36),
-            FOREIGN KEY (userId) REFERENCES users(userId)
+            userid UUID,
+            FOREIGN KEY (userid) REFERENCES users(userid)
          )
       `)
+      console.log('OTPs table created successfully')
    } catch (error) {
       console.error('Error creating otps table: ', error)
    } finally {
-      conn.release()
+      await client.end()
    }
 }
 

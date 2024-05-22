@@ -86,7 +86,7 @@ export const addUserDetailsValidator = (
          'string.empty': `Email cannot be an empty field`,
          'string.email': `Email should be a valid email`,
       }),
-      firstName: Joi.string().min(3).max(30).required().messages({
+      firstname: Joi.string().min(3).max(30).required().messages({
          'string.base': `First name should be a type of 'text'`,
          'string.empty': `First name cannot be an empty field`,
          'string.min': `First name should have a minimum length of {#limit}`,
@@ -98,7 +98,7 @@ export const addUserDetailsValidator = (
          'string.min': `Last name should have a minimum length of {#limit}`,
          'string.max': `Last name should have a maximum length of {#limit}`,
       }),
-      profilePicture: Joi.string().uri().optional().messages({
+      profilepicture: Joi.string().uri().optional().messages({
          'string.base': `Profile picture should be a type of 'text'`,
          'string.empty': `Profile picture cannot be an empty field`,
          'string.uri': `Profile picture should be a valid URI`,

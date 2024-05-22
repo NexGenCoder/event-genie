@@ -1,19 +1,18 @@
 import { IOtp } from 'types/user'
-
-import { pool } from '../utils/dbconnect'
+import { createConnection } from '../utils/dbconnect'
 
 export const addOtpModel = async (otp: IOtp) => {
-   const conn = await pool.getConnection()
+   const client = await createConnection()
    try {
-      const result = await conn.query(
-         'INSERT INTO Otps (mobile, countryCode, expiresAt, otp) VALUES (?, ?, ?, ?)',
+      const result = await client.query(
+         'INSERT INTO otps (mobile, countryCode, expiresAt, otp) VALUES ($1, $2, $3, $4) RETURNING *',
          [otp.mobile, otp.countryCode, otp.expiresAt, otp.otp],
       )
-      return result[0]
+      return result.rows[0]
    } catch (error) {
-      throw new Error(`Error adding otp: ${error}`)
+      throw new Error(`Error adding OTP: ${error}`)
    } finally {
-      conn.release()
+      await client.end()
    }
 }
 
@@ -21,31 +20,31 @@ export const getOtpByMobileNumberModel = async (
    mobile: number,
    otp: string,
 ) => {
-   const conn = await pool.getConnection()
+   const client = await createConnection()
    try {
-      const result = await conn.query(
-         'SELECT * FROM Otps WHERE mobile = ? AND otp = ?',
+      const result = await client.query(
+         'SELECT * FROM Otps WHERE mobile = $1 AND otp = $2',
          [mobile, otp],
       )
-      return result[0]
+      return result.rows[0]
    } catch (error) {
       throw new Error(`Error getting otp by mobile number: ${error}`)
    } finally {
-      conn.release()
+      await client.end()
    }
 }
 
 export const verifyOtpModel = async (mobile: number, otp: string) => {
-   const conn = await pool.getConnection()
+   const client = await createConnection()
    try {
-      const result = await conn.query(
-         'UPDATE Otps SET isVerified = true WHERE mobile = ? AND otp = ?',
+      const result = await client.query(
+         'UPDATE Otps SET isVerified = true WHERE mobile = $1 AND otp = $2 RETURNING *',
          [mobile, otp],
       )
-      return result[0]
+      return result.rows[0]
    } catch (error) {
       throw new Error(`Error verifying otp: ${error}`)
    } finally {
-      conn.release()
+      await client.end()
    }
 }

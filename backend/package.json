@@ -23,9 +23,9 @@
     "express": "^4.18.2",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
-    "mariadb": "^3.3.0",
     "passport": "^0.7.0",
-    "passport-google-oauth2": "^0.2.0"
+    "passport-google-oauth2": "^0.2.0",
+    "pg": "^8.11.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -41,6 +41,7 @@
     "@types/node": "^20.9.3",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth2": "^0.1.8",
+    "@types/pg": "^8.11.6",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "cors": "^2.8.5",

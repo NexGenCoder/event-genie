@@ -1,10 +1,10 @@
 export interface IUser {
-   userId?: number
+   userid?: number
    username?: string
-   firstName?: string
+   firstname?: string
    lastName?: string
    email?: string
-   profilePicture?: string
+   profilepicture?: string
    googleId?: string
    bio?: string
    createdAt?: Date
@@ -17,7 +17,7 @@ export interface IUser {
    isAccountSuspended?: boolean
 }
 export interface IUserPayloadForToken {
-   userId: number
+   userid: number
 }
 
 export interface IOtp {

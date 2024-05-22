@@ -25,8 +25,8 @@ export const getSelfController = async (
    res: express.Response,
 ) => {
    try {
-      const { userId } = res.locals
-      const user = await getUserByUserIdModel(userId)
+      const { userid } = res.locals
+      const user = await getUserByUserIdModel(userid)
       if (!user) {
          res.clearCookie('OG-AUTH')
          return res.status(404).json({ message: 'User not found' })
@@ -107,7 +107,7 @@ export const verifyOTPController = async (
       await verifyOtpModel(mobile as number, otp)
       const userData = await createUserIfNotExistsModel(mobile as number)
       const payload = {
-         userId: userData.userId,
+         userid: userData.userid,
       }
       const token = await generateJWT(payload)
       res.cookie('OG-AUTH', token, {
@@ -127,7 +127,7 @@ export const verifyOTPController = async (
 
 /**
  * Update user details
- * @param req : username, email, firstName, lastName, role, profilePicture, bio
+ * @param req : username, email, firstname, lastName, role, profilepicture, bio
  * @param res : message
  * @returns
  */
@@ -136,16 +136,16 @@ export const updateUserDetailsController = async (
    res: express.Response,
 ) => {
    try {
-      const { userId } = res.locals
-      const { username, email, firstName, lastName, profilePicture, bio } =
+      const { userid } = res.locals
+      const { username, email, firstname, lastName, profilepicture, bio } =
          req.body
 
-      await updateUserProfileModel(userId, {
+      await updateUserProfileModel(userid, {
          username,
          email,
-         firstName,
+         firstname,
          lastName,
-         profilePicture,
+         profilepicture,
          isEmailVerified: false,
          isProfileCompleted: true,
          bio,
@@ -229,7 +229,7 @@ export const googleAuthCallbackController = (
       }
 
       const payload = {
-         userId: user.userId,
+         userid: user.userid,
       }
 
       const token = await generateJWT(payload)

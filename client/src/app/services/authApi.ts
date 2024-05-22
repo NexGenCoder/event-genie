@@ -2,7 +2,7 @@ import { api } from '@/app/services/api'
 
 type ISendOtp = {
    mobile: string
-   countryCode: string
+   countrycode: string
 }
 
 type IVerifyOtp = {
@@ -13,9 +13,9 @@ type IVerifyOtp = {
 type IAddUserDetails = {
    username: string
    email: string
-   firstName: string
-   lastName: string
-   profilePicture: string
+   firstname: string
+   lastname: string
+   profilepicture: string
    bio: string
 }
 
@@ -24,8 +24,8 @@ type ISendOtpResponse = {
    data: {
       otp: string
       mobile: string
-      countryCode: string
-      expiresAt: string
+      countrycode: string
+      expiresat: string
    }
 }
 
@@ -35,13 +35,13 @@ type IUserResponse = {
       id: string
       username: string
       email: string
-      firstName: string
-      lastName: string
-      profilePicture: string
+      firstname: string
+      lastname: string
+      profilepicture: string
       bio: string
-      isMobileVerified: boolean
-      isEmailVerified: boolean
-      isProfileCompleted: boolean
+      ismobileverified: boolean
+      isemailverified: boolean
+      isprofilecompleted: boolean
    }
 }
 

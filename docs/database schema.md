@@ -2,15 +2,15 @@
 
 ## User Table
 
-- `userId`: (Optional) number
+- `userid`: (Optional) number
 - `username`: (Optional) string
-- `firstName`: (Optional) string
+- `firstname`: (Optional) string
 - `lastName`: (Optional) string
 - `email`: (Optional) string
 - `googleId`: (Optional) string
 - `role`: (Optional) "Organizer" | "Vendor" | "Guest"
 - `subscription`: (Optional) "Free" | "Basic" | "Premium"
-- `profilePicture`: (Optional) string
+- `profilepicture`: (Optional) string
 - `bio`: (Optional) string
 - `createdAt`: (Optional) Date
 - `updatedAt`: (Optional) Date
@@ -53,7 +53,7 @@
 
 - `rsvpID`: (Optional) number
 - `eventID`: number (Foreign key reference to Event.EventID)
-- `userId`: number (Foreign key reference to User.UserID)
+- `userid`: number (Foreign key reference to User.UserID)
 - `role`: "Organizer" | "Vendor" | "Guest"
 - `rsvpStatus`: "Accepted" | "Declined" | "Pending" (Optional)
 - `createdAt`: (Optional) Date
@@ -63,7 +63,7 @@
 
 - `participantID`: (Optional) number
 - `eventID`: number
-- `userId`: number
+- `userid`: number
 - `rvspID`: number
 - `role`: "Organizer" | "Vendor" | "Guest"
 - `rsvpStatus`: "Accepted" | "Declined" | "Pending" (Optional)
@@ -94,7 +94,7 @@
 
 - `participantID`: (Optional) number
 - `channelID`: number (Foreign key reference to channel.channelID)
-- `userId`: number (Foreign key reference to User.UserID)
+- `userid`: number (Foreign key reference to User.UserID)
 - `joinedAt`: (Optional) Date
 - `lastSeen`: (Optional) Date
 - `createdAt`: (Optional) Date

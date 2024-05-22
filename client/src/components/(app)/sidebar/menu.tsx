@@ -10,10 +10,10 @@ import Link from 'next/link'
 const { Text } = Typography
 
 interface MenusProps {
-   userId: string
+   userid: string
 }
 
-const Menus = ({ userId }: MenusProps) => {
+const Menus = ({ userid }: MenusProps) => {
    const {
       token: { colorBgContainer, colorTextBase, colorBgTextHover },
    } = theme.useToken()
@@ -33,20 +33,20 @@ const Menus = ({ userId }: MenusProps) => {
                <EventSwitch />
 
                <Link
-                  href={`/app/${userId}`}
+                  href={`/app/${userid}`}
                   className="rounded-xl p-2 w-full flex flex-col items-center justify-center cursor-pointer"
                >
                   <FaHome size={30} color={colorTextBase} />
                   <Text className="text-xs text-center">Home</Text>
                </Link>
-               <Link href={`/app/${userId}/dms`}>
+               <Link href={`/app/${userid}/dms`}>
                   <PiChatsFill size={30} color={colorTextBase} />
                   <Text className="text-xs text-center">DMs</Text>
                </Link>
             </Flex>
             <Flex gap="middle" vertical className="w-full" align="center">
                <CreateDropdown />
-               <Link href={`/app/${userId}/profile`}>
+               <Link href={`/app/${userid}/profile`}>
                   <Tooltip title="Sunny Sahsi" placement="right">
                      <Avatar
                         size={50}
