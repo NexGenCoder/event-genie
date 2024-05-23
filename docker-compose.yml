@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  postgresdb:
+    image: postgres
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+    ports:
+      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
+    volumes:
+      - ./db:/var/lib/postgresql/data/
+  app:
+    depends_on:
+      - postgresdb
+    build: 
+      context: .
+      dockerfile: Dockerfile  # Specify the Dockerfile location
+    env_file: ./.env
+    ports:
+      - 3001:3001
+    environment:
+      - DB_HOST=postgresdb
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$POSTGRESDB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+    command: ["yarn", "start"]
