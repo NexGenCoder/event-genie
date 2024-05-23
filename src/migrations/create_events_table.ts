@@ -5,13 +5,13 @@ const createEventsTable = async () => {
    try {
       await client.query(`
           CREATE TABLE IF NOT EXISTS Events (
-             eventId VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+             eventId UUID PRIMARY KEY DEFAULT gen_random_uuid(),
              eventName VARCHAR(255) NOT NULL,
-             organizerId VARCHAR(36) NOT NULL,
-             startDateTime DATETIME NOT NULL,
-             endDateTime DATETIME NOT NULL,
+             organizerId UUID NOT NULL,
+             startDateTime TIMESTAMPTZ NOT NULL,
+             endDateTime TIMESTAMPTZ NOT NULL,
              description VARCHAR(255) NOT NULL,
-             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+             createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
              FOREIGN KEY (organizerId) REFERENCES users(userId)
           )
        `)
