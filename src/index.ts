@@ -12,6 +12,7 @@ import router from './routes'
 import passport from './services/passport'
 import { createConnection } from './utils/dbconnect'
 import createOtpsTable from './migrations/create_otps_table'
+import createEventsTable from './migrations/create_events_table'
 
 dotenv.config()
 
@@ -57,6 +58,7 @@ server.listen(PORT, () => {
       // await client.query('DROP TABLE IF EXISTS otps CASCADE')
       await createUsersTable()
       await createOtpsTable()
+      await createEventsTable()
       console.log('Tables created')
       await client.end()
    } catch (error) {
