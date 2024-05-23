@@ -27,3 +27,6 @@
 
 # test coverage
 /coverage
+
+# db folder
+/db
