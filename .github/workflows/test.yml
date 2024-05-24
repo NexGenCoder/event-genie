@@ -23,4 +23,4 @@ jobs:
          - run: yarn
          - run: yarn test
          - run: yarn prettier:check
-         - run: yarn lint
+         - run: yarn lint:check
