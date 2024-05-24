@@ -8,7 +8,7 @@ import {
 } from '../models/otp'
 import {
    createUserIfNotExistsModel,
-   getUserByUserIdModel,
+   getUserByuseridModel,
    updateUserProfileModel,
 } from '../models/user'
 import passport from '../services/passport'
@@ -26,7 +26,7 @@ export const getSelfController = async (
 ) => {
    try {
       const { userid } = res.locals
-      const user = await getUserByUserIdModel(userid)
+      const user = await getUserByuseridModel(userid)
       if (!user) {
          res.clearCookie('OG-AUTH')
          return res.status(404).json({ message: 'User not found' })
@@ -43,7 +43,7 @@ export const getSelfController = async (
 
 /**
  * Send OTP for Sign in or Sign up
- * @param req : mobile, countryCode
+ * @param req : mobile, country_code
  * @param res : message, data
  * @returns
  */
@@ -52,14 +52,14 @@ export const sendOTPController = async (
    res: express.Response,
 ) => {
    try {
-      const { mobile, countryCode } = req.body
+      const { mobile, country_code } = req.body
       const otp = Math.floor(100000 + Math.random() * 900000).toString()
-      const expiresAt = new Date(Date.now() + 6000000) // 10 minutes
+      const expires_at = new Date(Date.now() + 6000000) // 10 minutes
 
       const otpData: IOtp = {
          mobile,
-         countryCode,
-         expiresAt,
+         country_code,
+         expires_at,
          otp,
       }
 
@@ -69,8 +69,8 @@ export const sendOTPController = async (
          data: {
             otp,
             mobile,
-            countryCode,
-            expiresAt,
+            country_code,
+            expires_at,
          },
       })
    } catch (err) {
@@ -100,7 +100,7 @@ export const verifyOTPController = async (
          return res.status(401).json({ message: 'Invalid OTP' })
       }
 
-      if (otpData.expiresAt < new Date() || otpData.isVerified) {
+      if (otpData.expires_at < new Date() || otpData.is_verified) {
          return res.status(401).json({ message: 'OTP expired' })
       }
 
@@ -127,7 +127,7 @@ export const verifyOTPController = async (
 
 /**
  * Update user details
- * @param req : username, email, firstname, lastname, role, profilepicture, bio
+ * @param req : username, email, firstname, lastname, role, profile_picture, bio
  * @param res : message
  * @returns
  */
@@ -137,7 +137,7 @@ export const updateUserDetailsController = async (
 ) => {
    try {
       const { userid } = res.locals
-      const { username, email, firstname, lastname, profilepicture, bio } =
+      const { username, email, firstname, lastname, profile_picture, bio } =
          req.body
 
       await updateUserProfileModel(userid, {
@@ -145,9 +145,9 @@ export const updateUserDetailsController = async (
          email,
          firstname,
          lastname,
-         profilepicture,
-         isEmailVerified: false,
-         isProfileCompleted: true,
+         profile_picture,
+         is_email_verified: false,
+         is_profile_completed: true,
          bio,
       })
 

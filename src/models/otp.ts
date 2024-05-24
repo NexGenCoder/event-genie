@@ -5,8 +5,8 @@ export const addOtpModel = async (otp: IOtp) => {
    const client = await createConnection()
    try {
       const result = await client.query(
-         'INSERT INTO otps (mobile, countryCode, expiresAt, otp) VALUES ($1, $2, $3, $4) RETURNING *',
-         [otp.mobile, otp.countryCode, otp.expiresAt, otp.otp],
+         'INSERT INTO otps (mobile, country_code, expires_at, otp) VALUES ($1, $2, $3, $4) RETURNING *',
+         [otp.mobile, otp.country_code, otp.expires_at, otp.otp],
       )
       return result.rows[0]
    } catch (error) {
@@ -38,7 +38,7 @@ export const verifyOtpModel = async (mobile: number, otp: string) => {
    const client = await createConnection()
    try {
       const result = await client.query(
-         'UPDATE Otps SET isVerified = true WHERE mobile = $1 AND otp = $2 RETURNING *',
+         'UPDATE Otps SET is_verified = true WHERE mobile = $1 AND otp = $2 RETURNING *',
          [mobile, otp],
       )
       return result.rows[0]

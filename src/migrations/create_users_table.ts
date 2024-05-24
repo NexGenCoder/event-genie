@@ -6,24 +6,23 @@ const createUsersTable = async () => {
       await client.query(`
       CREATE TABLE IF NOT EXISTS users (
         userid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        googleId UUID,
+        googleid VARCHAR(36) UNIQUE,
         username VARCHAR(16),
         firstname VARCHAR(16),
         lastname VARCHAR(16),
         email VARCHAR(36),
         mobile VARCHAR(20),
-        profilepicture VARCHAR(255),
+        profile_picture VARCHAR(255),
         bio TEXT,
-        createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-        updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-        isMobileVerified BOOLEAN DEFAULT FALSE,
-        isEmailVerified BOOLEAN DEFAULT FALSE,
-        isProfileCompleted BOOLEAN DEFAULT TRUE,
-        isAccountDeleted BOOLEAN DEFAULT FALSE,
-        isAccountSuspended BOOLEAN DEFAULT FALSE
+        created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        updated_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        is_mobile_verified BOOLEAN DEFAULT FALSE,
+        is_email_verified BOOLEAN DEFAULT FALSE,
+        is_profile_completed BOOLEAN DEFAULT TRUE,
+        is_account_deleted BOOLEAN DEFAULT FALSE,
+        is_account_suspended BOOLEAN DEFAULT FALSE
       )
     `)
-      console.log('Users table created successfully')
    } catch (error) {
       console.error('Error creating users table:', error)
    } finally {
