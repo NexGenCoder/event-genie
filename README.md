@@ -49,15 +49,15 @@ The backend server will start on `http://localhost:3001`.
 
 ### Environment Variables
 
-- **PORT**: The port on which the backend server will run.
-- **MONGODB_URI**: The connection string for your MongoDB database.
-- **JWT_SECRET_KEY**: A secret key for JWT token generation.
-- **GOOGLE_CLIENT_ID**: Your Google OAuth client ID.
-- **GOOGLE_CLIENT_SECRET**: Your Google OAuth client secret.
-- **GOOGLE_CALLBACK_URL**: The callback URL for Google OAuth.
-- **CORS_ORIGIN**: The origin URL for CORS.
-- **SESSION_SECRET**: A secret key for session generation.
-- **CLIENT_URL**: The URL for the frontend client.
+-  **PORT**: The port on which the backend server will run.
+-  **MONGODB_URI**: The connection string for your MongoDB database.
+-  **JWT_SECRET_KEY**: A secret key for JWT token generation.
+-  **GOOGLE_CLIENT_ID**: Your Google OAuth client ID.
+-  **GOOGLE_CLIENT_SECRET**: Your Google OAuth client secret.
+-  **GOOGLE_CALLBACK_URL**: The callback URL for Google OAuth.
+-  **CORS_ORIGIN**: The origin URL for CORS.
+-  **SESSION_SECRET**: A secret key for session generation.
+-  **CLIENT_URL**: The URL for the frontend client.
 
 Make sure to keep your `.env` file secure and do not share it publicly.
 
