@@ -1,0 +1,14 @@
+PORT=3001
+
+JWT_SECRET_KEY="test-key"
+GOOGLE_CLIENT_ID="Your client Id"
+GOOGLE_CLIENT_SECRET="Your client secret"
+GOOGLE_CALLBACK_URL="http://localhost:3001/auth/google/callback"
+CORS_ORIGIN="http://localhost:3000"
+SESSION_SECRET="test-key"
+CLIENT_URL="http://localhost:3000"
+DB_USER= "postgres"
+DB_NAME= "Your db name"
+DB_PASSWORD= "Your db password"
+POSTGRESDB_LOCAL_PORT= '5433'
+POSTGRESDB_DOCKER_PORT= '5432'

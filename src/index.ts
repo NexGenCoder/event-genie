@@ -19,6 +19,11 @@ const PORT = process.env.PORT
 
 const app = express()
 
+app.use((req, res, next) => {
+   console.log(`Endpoint hit: ${req.method} ${req.url}`)
+   next()
+})
+
 app.use(
    cors({
       origin: process.env.CORS_ORIGIN,
@@ -48,12 +53,11 @@ server.listen(PORT, () => {
 ;(async () => {
    try {
       const client = await createConnection()
-
-      // Run migrations
+      // await client.query('DROP TABLE IF EXISTS users CASCADE')
+      // await client.query('DROP TABLE IF EXISTS otps CASCADE')
       await createUsersTable()
       await createOtpsTable()
-
-      // Remember to close the connection when done
+      console.log('Tables created')
       await client.end()
    } catch (error) {
       console.error('Error running migration:', error)

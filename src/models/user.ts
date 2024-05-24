@@ -26,10 +26,10 @@ export const createUserIfNotExistsModel = async (mobile: number) => {
       if (existingUser.rows.length > 0) {
          return existingUser.rows[0]
       } else {
-         const newUser = { mobile, isMobileVerified: true }
+         const newUser = { mobile, is_mobile_verified: true }
          const result = await client.query(
-            'INSERT INTO users (mobile, isMobileVerified) VALUES ($1, $2) RETURNING *',
-            [newUser.mobile, newUser.isMobileVerified],
+            'INSERT INTO users (mobile, is_mobile_verified) VALUES ($1, $2) RETURNING *',
+            [newUser.mobile, newUser.is_mobile_verified],
          )
          const insertId = result.rows[0].userid
          const userData = await client.query(
@@ -45,7 +45,7 @@ export const createUserIfNotExistsModel = async (mobile: number) => {
    }
 }
 
-export const getUserByUserIdModel = async (userid: string) => {
+export const getUserByuseridModel = async (userid: string) => {
    const client = await createConnection()
    try {
       const result = await client.query(
@@ -64,17 +64,17 @@ export const updateUserProfileModel = async (userid: string, user: IUser) => {
    const client = await createConnection()
    try {
       const result = await client.query(
-         'UPDATE users SET username = $1, email = $2, firstname = $3, lastname = $4, profilepicture = $5, bio = $6, isMobileVerified = $7, isEmailVerified = $8, isProfileCompleted = $9 WHERE userid = $10 RETURNING *',
+         'UPDATE users SET username = $1, email = $2, firstname = $3, lastname = $4, profile_picture = $5, bio = $6, is_mobile_verified = $7, is_email_verified = $8, is_profile_completed = $9 WHERE userid = $10 RETURNING *',
          [
             user.username,
             user.email,
             user.firstname,
             user.lastname,
-            user.profilepicture,
+            user.profile_picture,
             user.bio,
-            user.isMobileVerified,
-            user.isEmailVerified,
-            user.isProfileCompleted,
+            user.is_mobile_verified,
+            user.is_email_verified,
+            user.is_profile_completed,
             userid,
          ],
       )
@@ -101,22 +101,22 @@ export const getUserByEmailModel = async (email: string) => {
    }
 }
 
-export const getUserByGoogleIdModel = async (googleId: string) => {
+export const getUserBygoogleidModel = async (googleid: string) => {
    const client = await createConnection()
    try {
       const result = await client.query(
-         'SELECT * FROM users WHERE googleId = $1',
-         [googleId],
+         'SELECT * FROM users WHERE googleid = $1',
+         [googleid],
       )
       return result.rows[0]
    } catch (error) {
-      throw new Error(`Error getting user by googleId: ${error}`)
+      throw new Error(`Error getting user by googleid: ${error}`)
    } finally {
       await client.end()
    }
 }
 
-export const getUserIdByUsernameOrEmailModel = async (
+export const getuseridByUsernameOrEmailModel = async (
    usernameOrEmail: string,
 ) => {
    const client = await createConnection()
@@ -141,13 +141,13 @@ export const createOrUpdateGoogleUserModel = async (user: IUser) => {
          [user.email],
       )
       if (existingUser.rows.length > 0) {
-         const updateUser = { ...user, isEmailVerified: true }
+         const updateUser = { ...user, is_email_verified: true }
          await client.query(
-            'UPDATE users SET googleId = $1, profilepicture = $2, isEmailVerified = $3 WHERE email = $4',
+            'UPDATE users SET googleid = $1, profile_picture = $2, is_email_verified = $3 WHERE email = $4',
             [
-               updateUser.googleId,
-               updateUser.profilepicture,
-               updateUser.isEmailVerified,
+               updateUser.googleid,
+               updateUser.profile_picture,
+               updateUser.is_email_verified,
                user.email,
             ],
          )
@@ -158,18 +158,18 @@ export const createOrUpdateGoogleUserModel = async (user: IUser) => {
          return updatedUser
       } else {
          const result = await client.query(
-            'INSERT INTO users (username, email, googleId, profilepicture, isEmailVerified) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            'INSERT INTO users (firstname, lastname, email, googleid, profile_picture, is_email_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [
                user.firstname,
                user.lastname,
                user.email,
-               user.googleId,
-               user.profilepicture,
+               user.googleid,
+               user.profile_picture,
                true,
             ],
          )
          const insertId = result.rows[0].userid
-         return { userid: insertId, ...user, verifyEmail: true }
+         return { userid: insertId, ...user, is_email_verified: true }
       }
    } catch (error) {
       throw new Error(`Error creating/updating user: ${error}`)
