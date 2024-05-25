@@ -24,8 +24,7 @@ const createEventTypeTable = async () => {
       }
    } catch (error) {
       console.error('Error creating otps table: ', error)
-   } finally {
-      await client.end()
+      throw error
    }
 }
 
