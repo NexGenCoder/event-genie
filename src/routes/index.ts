@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 
 import authentication from './authentication'
 import user from './user'
-import eventtype from './eventtype'
+import events from './events'
 
 const router = express.Router()
 /**
@@ -22,6 +22,6 @@ router.get('/', (req: Request, res: Response) => {
 export default (): express.Router => {
    authentication(router)
    user(router)
-   eventtype(router)
+   events(router)
    return router
 }

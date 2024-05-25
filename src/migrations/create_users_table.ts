@@ -25,8 +25,7 @@ const createUsersTable = async () => {
     `)
    } catch (error) {
       console.error('Error creating users table:', error)
-   } finally {
-      await client.end()
+      throw error
    }
 }
 
