@@ -18,6 +18,7 @@ import createRsvpsTable from './migrations/create_rsvps_table'
 import router from './routes'
 import passport from './services/passport'
 import { createConnection } from './utils/dbconnect'
+import createVendorsTable from './migrations/create_vendor_table'
 
 dotenv.config()
 
@@ -76,6 +77,7 @@ server.listen(PORT, () => {
       await createChannelsTable()
       await createRsvpsTable()
       await createGuestsTable()
+      await createVendorsTable()
       console.log('Tables created')
       await client.end()
    } catch (error) {
