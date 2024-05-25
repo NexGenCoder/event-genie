@@ -4,6 +4,8 @@ import {
    createEventModel,
    getEventsByUserIdModel,
 } from '../models/events'
+import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
+import { getChannelCategoriesByEventIdModal } from '../models/channelCategoryModel'
 
 /**
  * Get all event types
@@ -43,6 +45,8 @@ export const createEventController = async (
       const { userid } = res.locals
 
       const result = await createEventModel({ ...req.body, userId: userid })
+      const eventid = result.eventid
+      await defaultCategoriesAndChannels(eventid)
       return res
          .status(201)
          .json({ message: 'Event created successfully', data: result })
@@ -71,6 +75,26 @@ export const getEventsByUserIdController = async (
       }
       return res.status(200).json({
          message: 'Events fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getChannelCategoriesByEventIdController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { eventid } = req.params
+      const data = await getChannelCategoriesByEventIdModal(eventid)
+      if (data.length === 0) {
+         return res.status(404).json({ message: 'No categories found' })
+      }
+      return res.status(200).json({
+         message: 'Categories fetched successfully',
          data,
       })
    } catch (error) {
