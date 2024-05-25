@@ -14,6 +14,8 @@ import { createConnection } from './utils/dbconnect'
 import createOtpsTable from './migrations/create_otps_table'
 import createEventTypeTable from './migrations/create_event_type_table'
 import createEventTable from './migrations/create_events_table'
+import createChannelCategoriesTable from './migrations/create_channel_categories_table'
+import createChannelsTable from './migrations/create_channels_table'
 
 dotenv.config()
 
@@ -56,11 +58,13 @@ server.listen(PORT, () => {
    try {
       const client = await createConnection()
       // await client.query('DROP TABLE IF EXISTS users CASCADE')
-      await client.query('DROP TABLE IF EXISTS events CASCADE')
+      // await client.query('DROP TABLE IF EXISTS channels CASCADE')
       await createUsersTable()
       await createOtpsTable()
       await createEventTypeTable()
       await createEventTable()
+      await createChannelCategoriesTable()
+      await createChannelsTable()
       console.log('Tables created')
       await client.end()
    } catch (error) {
