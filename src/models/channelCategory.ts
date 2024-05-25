@@ -1,7 +1,7 @@
+import { IChannelCategory, ICreateChannelCategory } from '../types/channel'
 import { createConnection } from '../utils/dbconnect'
-import { ICreateChannelCategory } from './../types/channel'
 
-export const createChannelCategoryModel = async (
+export const createCategoryModel = async (
    channelCategory: ICreateChannelCategory,
 ): Promise<string> => {
    const client = await createConnection()
@@ -19,6 +19,23 @@ export const createChannelCategoryModel = async (
          ],
       )
       return result.rows[0].categoryid
+   } finally {
+      await client.end()
+   }
+}
+
+export const getCategoriesByEventIdModal = async (
+   eventid: string,
+): Promise<IChannelCategory[]> => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         `
+            SELECT * FROM channel_categories WHERE eventid = $1
+        `,
+         [eventid],
+      )
+      return result.rows
    } finally {
       await client.end()
    }

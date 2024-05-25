@@ -1,4 +1,5 @@
 import { IOtp } from 'types/user'
+
 import { createConnection } from '../utils/dbconnect'
 
 export const addOtpModel = async (otp: IOtp) => {

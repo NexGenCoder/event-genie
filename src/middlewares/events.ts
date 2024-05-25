@@ -54,3 +54,88 @@ export const CreateEventValidator = (
    }
    next()
 }
+
+export const CreateCategoryValidator = (
+   req: express.Request,
+   res: express.Response,
+   next: express.NextFunction,
+) => {
+   const schema = Joi.object({
+      eventid: Joi.string().required().messages({
+         'string.base': `Event id should be a type of 'text'`,
+         'string.empty': `Event id cannot be an empty field`,
+         'string.pattern.base': `Event id should be a valid string`,
+      }),
+      name: Joi.string().min(3).max(30).required().messages({
+         'string.base': `Category name should be a type of 'text'`,
+         'string.empty': `Category name cannot be an empty field`,
+         'string.pattern.base': `Category name should be a valid string`,
+         'string.length': `Category name should have a minimum length of {#limit}`,
+      }),
+      description: Joi.string().max(500).messages({
+         'string.base': `Description should be a type of 'text'`,
+         'string.empty': `Description cannot be an empty field`,
+         'string.pattern.base': `Description should be a valid string`,
+      }),
+   })
+
+   const { error } = schema.validate(req.body)
+   if (error) {
+      return res.status(400).json({
+         message: error.details[0].message,
+      })
+   }
+   next()
+}
+
+export const CreateChannelValidator = (
+   req: express.Request,
+   res: express.Response,
+   next: express.NextFunction,
+) => {
+   const schema = Joi.object({
+      eventid: Joi.string().required().messages({
+         'string.base': `Event id should be a type of 'text'`,
+         'string.empty': `Event id cannot be an empty field`,
+         'string.pattern.base': `Event id should be a valid string`,
+      }),
+      categoryid: Joi.string().required().messages({
+         'string.base': `Category id should be a type of 'text'`,
+         'string.empty': `Category id cannot be an empty field`,
+         'string.pattern.base': `Category id should be a valid string`,
+      }),
+      name: Joi.string().min(3).max(30).required().messages({
+         'string.base': `Channel name should be a type of 'text'`,
+         'string.empty': `Channel name cannot be an empty field`,
+         'string.pattern.base': `Channel name should be a valid string`,
+         'string.length': `Channel name should have a minimum length of {#limit}`,
+      }),
+      icon: Joi.string().required().messages({
+         'string.base': `Channel icon should be a type of 'text'`,
+         'string.empty': `Channel icon cannot be an empty field`,
+         'string.pattern.base': `Channel icon should be a valid string`,
+      }),
+      type: Joi.string().required().messages({
+         'string.base': `Channel type should be a type of 'text'`,
+         'string.empty': `Channel type cannot be an empty field`,
+         'string.pattern.base': `Channel type should be a valid string`,
+      }),
+      description: Joi.string().max(500).messages({
+         'string.base': `Description should be a type of 'text'`,
+         'string.empty': `Description cannot be an empty field`,
+         'string.pattern.base': `Description should be a valid string`,
+      }),
+      isPrivate: Joi.boolean().required().messages({
+         'boolean.base': `Is private should be a type of 'boolean'`,
+         'boolean.empty': `Is private cannot be an empty field`,
+      }),
+   })
+
+   const { error } = schema.validate(req.body)
+   if (error) {
+      return res.status(400).json({
+         message: error.details[0].message,
+      })
+   }
+   next()
+}

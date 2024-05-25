@@ -1,11 +1,18 @@
 import express from 'express'
+
 import {
-   getEventTypesModel,
+   createCategoryModel,
+   getCategoriesByEventIdModal,
+} from '../models/channelCategory'
+import { getChannelCategoriesByEventIdModal } from '../models/channelCategoryModel'
+import { createChannelModel } from '../models/channels'
+import {
    createEventModel,
+   getEventDetailsModel,
    getEventsByUserIdModel,
+   getEventTypesModel,
 } from '../models/events'
 import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
-import { getChannelCategoriesByEventIdModal } from '../models/channelCategoryModel'
 
 /**
  * Get all event types
@@ -95,6 +102,85 @@ export const getChannelCategoriesByEventIdController = async (
       }
       return res.status(200).json({
          message: 'Categories fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+/**
+ * Get event details
+ * @param req : event id
+ * @param res : event details
+ * @returns
+ */
+
+export const getEventDetailsController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { eventid } = req.params
+      const data = await getEventDetailsModel(eventid)
+      if (!data) {
+         return res.status(404).json({ message: 'Event not found' })
+      }
+      return res.status(200).json({
+         message: 'Event details fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getCategoriesByEventIdController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { eventid } = req.params
+      const data = await getCategoriesByEventIdModal(eventid)
+      if (data.length === 0) {
+         return res.status(404).json({ message: 'No categories found' })
+      }
+      return res.status(200).json({
+         message: 'Categories fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const createCategoryController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const data = await createCategoryModel(req.body)
+      return res.status(201).json({
+         message: 'Category created successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const createChannelController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const data = await createChannelModel(req.body)
+      return res.status(201).json({
+         message: 'Channel created successfully',
          data,
       })
    } catch (error) {

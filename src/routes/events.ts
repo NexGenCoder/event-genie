@@ -1,12 +1,21 @@
 import express from 'express'
+
 import {
-   getEventTypesController,
+   createCategoryController,
+   createChannelController,
    createEventController,
-   getEventsByUserIdController,
+   getCategoriesByEventIdController,
    getChannelCategoriesByEventIdController,
+   getEventDetailsController,
+   getEventsByUserIdController,
+   getEventTypesController,
 } from '../controller/events'
-import { CreateEventValidator } from '../middlewares/events'
 import { authinticate } from '../middlewares/authinticate'
+import {
+   CreateCategoryValidator,
+   CreateChannelValidator,
+   CreateEventValidator,
+} from '../middlewares/events'
 
 export default (router: express.Router) => {
    router.get('/event/types', getEventTypesController)
@@ -18,8 +27,26 @@ export default (router: express.Router) => {
    )
    router.get('/events', authinticate, getEventsByUserIdController)
    router.get(
-      '/event/categories/:eventid',
+      '/event/channels/:eventid',
       authinticate,
       getChannelCategoriesByEventIdController,
+   )
+   router.get('/event/:eventid', authinticate, getEventDetailsController)
+   router.get(
+      '/event/categories/:eventid',
+      authinticate,
+      getCategoriesByEventIdController,
+   )
+   router.post(
+      '/event/category',
+      authinticate,
+      CreateCategoryValidator,
+      createCategoryController,
+   )
+   router.post(
+      '/event/channel',
+      authinticate,
+      CreateChannelValidator,
+      createChannelController,
    )
 }

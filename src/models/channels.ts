@@ -1,4 +1,4 @@
-import { ICreateChannel } from './../types/channel'
+import { ICreateChannel } from '../types/channel'
 import { createConnection } from '../utils/dbconnect'
 
 export const createChannelModel = async (

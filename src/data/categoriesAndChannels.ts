@@ -6,21 +6,21 @@ export const categoriesAndChannels = [
       },
       channels: [
          {
-            name: 'General channel',
-            icon: 'general',
+            name: 'General',
+            icon: 'text',
             type: 'text',
             description: 'General discussion channel',
             isPrivate: false,
          },
          {
-            name: 'Welcome channel',
-            icon: 'welcome',
+            name: 'Welcome',
+            icon: 'pray',
             type: 'text',
             description: 'Welcome messages channel',
             isPrivate: false,
          },
          {
-            name: 'Help channel',
+            name: 'Help',
             icon: 'help',
             type: 'text',
             description: 'Channel for getting help',
@@ -35,7 +35,7 @@ export const categoriesAndChannels = [
       },
       channels: [
          {
-            name: 'Voice channel',
+            name: 'General',
             icon: 'voice',
             type: 'voice',
             description: 'Voice chat channel',

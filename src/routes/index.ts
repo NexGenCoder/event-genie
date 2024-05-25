@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express'
 
 import authentication from './authentication'
-import user from './user'
 import events from './events'
+import user from './user'
 
 const router = express.Router()
 /**

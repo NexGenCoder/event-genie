@@ -1,4 +1,5 @@
 import { IUser } from 'types/user'
+
 import { createConnection } from '../utils/dbconnect'
 
 export const getUserByUsernameModel = async (username: string) => {

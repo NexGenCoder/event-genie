@@ -1,12 +1,13 @@
 import { ICreateChannel, ICreateChannelCategory } from 'types/channel'
-import { createChannelCategoryModel } from '../../models/channelCategory'
+
+import { categoriesAndChannels } from '../../data/categoriesAndChannels'
+import { createCategoryModel } from '../../models/channelCategory'
 import { createChannelModel } from '../../models/channels'
-import { categoriesAndChannels } from './../../data/categoriesAndChannels'
 
 export const defaultCategoriesAndChannels = async (eventId: string) => {
    for (const categoryAndChannels of categoriesAndChannels) {
       const { category, channels } = categoryAndChannels
-      const categoryId = await createChannelCategoryModel({
+      const categoryId = await createCategoryModel({
          eventid: eventId,
          name: category.name,
          description: category.description,

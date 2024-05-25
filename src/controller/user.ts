@@ -1,4 +1,5 @@
 import express from 'express'
+
 import { getUserByUsernameModel } from '../models/user'
 
 /**

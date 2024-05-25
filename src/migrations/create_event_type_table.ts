@@ -1,4 +1,4 @@
-import { eventTypes } from './../data/eventtype'
+import { eventTypes } from '../data/eventtype'
 import { createConnection } from '../utils/dbconnect'
 
 const createEventTypeTable = async () => {
