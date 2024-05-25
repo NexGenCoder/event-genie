@@ -13,6 +13,8 @@ import createEventTypeTable from './migrations/create_event_type_table'
 import createEventTable from './migrations/create_events_table'
 import createOtpsTable from './migrations/create_otps_table'
 import createUsersTable from './migrations/create_users_table'
+import createGuestsTable from './migrations/create_guest_list_table'
+import createRsvpsTable from './migrations/create_rsvps_table'
 import router from './routes'
 import passport from './services/passport'
 import { createConnection } from './utils/dbconnect'
@@ -63,13 +65,17 @@ server.listen(PORT, () => {
       // await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
       // await client.query('DROP TABLE IF EXISTS otps CASCADE')
       // await client.query('DROP TABLE IF EXISTS users CASCADE')
-      console.log('Tables dropped')
+      await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
+      await client.query('DROP TABLE IF EXISTS guests CASCADE')
+      // console.log('Tables dropped')
       await createUsersTable()
       await createOtpsTable()
       await createEventTypeTable()
       await createEventTable()
       await createChannelCategoriesTable()
       await createChannelsTable()
+      await createRsvpsTable()
+      await createGuestsTable()
       console.log('Tables created')
       await client.end()
    } catch (error) {

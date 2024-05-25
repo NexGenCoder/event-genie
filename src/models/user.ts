@@ -179,10 +179,12 @@ export const createOrUpdateGoogleUserModel = async (user: IUser) => {
    }
 }
 
-export const getAllUsers = async () => {
+export const getAllUsersModel = async () => {
    const client = await createConnection()
    try {
-      const result = await client.query('SELECT * FROM users')
+      const result = await client.query(
+         'SELECT userid, username, firstname, lastname FROM users',
+      )
       return result.rows
    } catch (error) {
       throw new Error(`Error getting all users: ${error}`)

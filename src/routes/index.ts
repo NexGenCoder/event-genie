@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express'
 import authentication from './authentication'
 import events from './events'
 import user from './user'
+import rsvps from './rsvps'
 
 const router = express.Router()
 /**
@@ -23,5 +24,6 @@ export default (): express.Router => {
    authentication(router)
    user(router)
    events(router)
+   rsvps(router)
    return router
 }

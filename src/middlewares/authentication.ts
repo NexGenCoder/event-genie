@@ -78,8 +78,8 @@ export const addUserDetailsValidator = (
       username: Joi.string().min(3).max(30).required().messages({
          'string.base': `Username should be a type of 'text'`,
          'string.empty': `Username cannot be an empty field`,
-         'string.min': `Username should have a minimum length of {#limit}`,
-         'string.max': `Username should have a maximum length of {#limit}`,
+         'string.min': `Username should have a minimum length of {#user_limit}`,
+         'string.max': `Username should have a maximum length of {#user_limit}`,
       }),
       email: Joi.string().email().required().messages({
          'string.base': `Email should be a type of 'text'`,
@@ -89,14 +89,14 @@ export const addUserDetailsValidator = (
       firstname: Joi.string().min(3).max(30).required().messages({
          'string.base': `First name should be a type of 'text'`,
          'string.empty': `First name cannot be an empty field`,
-         'string.min': `First name should have a minimum length of {#limit}`,
-         'string.max': `First name should have a maximum length of {#limit}`,
+         'string.min': `First name should have a minimum length of {#user_limit}`,
+         'string.max': `First name should have a maximum length of {#user_limit}`,
       }),
       lastname: Joi.string().min(3).max(30).required().messages({
          'string.base': `Last name should be a type of 'text'`,
          'string.empty': `Last name cannot be an empty field`,
-         'string.min': `Last name should have a minimum length of {#limit}`,
-         'string.max': `Last name should have a maximum length of {#limit}`,
+         'string.min': `Last name should have a minimum length of {#user_limit}`,
+         'string.max': `Last name should have a maximum length of {#user_limit}`,
       }),
       profile_picture: Joi.string().uri().optional().messages({
          'string.base': `Profile picture should be a type of 'text'`,
@@ -106,8 +106,8 @@ export const addUserDetailsValidator = (
       bio: Joi.string().min(10).max(500).optional().messages({
          'string.base': `Bio should be a type of 'text'`,
          'string.empty': `Bio cannot be an empty field`,
-         'string.min': `Bio should have a minimum length of {#limit}`,
-         'string.max': `Bio should have a maximum length of {#limit}`,
+         'string.min': `Bio should have a minimum length of {#user_limit}`,
+         'string.max': `Bio should have a maximum length of {#user_limit}`,
       }),
    })
    const { error } = schema.validate(req.body)

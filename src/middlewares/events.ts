@@ -11,7 +11,7 @@ export const CreateEventValidator = (
          'string.base': `Event name should be a type of 'text'`,
          'string.empty': `Event name cannot be an empty field`,
          'string.pattern.base': `Event name should be a valid string`,
-         'string.length': `Event name should have a minimum length of {#limit}`,
+         'string.length': `Event name should have a minimum length of {#user_limit}`,
       }),
       startDateTime: Joi.date().required().messages({
          'date.base': `Start date time should be a type of 'date'`,
@@ -70,7 +70,7 @@ export const CreateCategoryValidator = (
          'string.base': `Category name should be a type of 'text'`,
          'string.empty': `Category name cannot be an empty field`,
          'string.pattern.base': `Category name should be a valid string`,
-         'string.length': `Category name should have a minimum length of {#limit}`,
+         'string.length': `Category name should have a minimum length of {#user_limit}`,
       }),
       description: Joi.string().max(500).messages({
          'string.base': `Description should be a type of 'text'`,
@@ -108,7 +108,7 @@ export const CreateChannelValidator = (
          'string.base': `Channel name should be a type of 'text'`,
          'string.empty': `Channel name cannot be an empty field`,
          'string.pattern.base': `Channel name should be a valid string`,
-         'string.length': `Channel name should have a minimum length of {#limit}`,
+         'string.length': `Channel name should have a minimum length of {#user_limit}`,
       }),
       icon: Joi.string().required().messages({
          'string.base': `Channel icon should be a type of 'text'`,
