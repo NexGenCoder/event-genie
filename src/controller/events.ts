@@ -5,7 +5,7 @@ import {
    getCategoriesByEventIdModal,
 } from '../models/channelCategory'
 import { getChannelCategoriesByEventIdModal } from '../models/channelCategoryModel'
-import { createChannelModel } from '../models/channels'
+import { createChannelModel, getChannelByIdModel } from '../models/channels'
 import {
    createEventModel,
    getEventDetailsModel,
@@ -13,6 +13,7 @@ import {
    getEventTypesModel,
 } from '../models/events'
 import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
+import { isValidUUID } from '../utils/isValidUUID'
 
 /**
  * Get all event types
@@ -181,6 +182,30 @@ export const createChannelController = async (
       const data = await createChannelModel(req.body)
       return res.status(201).json({
          message: 'Channel created successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getChannelByIdController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { channelid } = req.params
+
+      if (isValidUUID(channelid) === false) {
+         return res.status(400).json({ message: 'Invalid channel id' })
+      }
+      const data = await getChannelByIdModel(channelid)
+      if (!data) {
+         return res.status(404).json({ message: 'Channel not found' })
+      }
+      return res.status(200).json({
+         message: 'Channel fetched successfully',
          data,
       })
    } catch (error) {

@@ -24,3 +24,18 @@ export const createChannelModel = async (
       await client.end()
    }
 }
+
+export const getChannelByIdModel = async (channelId: string) => {
+   const client = await createConnection()
+   try {
+      const { rows } = await client.query(
+         `
+            SELECT * FROM channels WHERE channelid = $1
+         `,
+         [channelId],
+      )
+      return rows[0]
+   } finally {
+      await client.end()
+   }
+}

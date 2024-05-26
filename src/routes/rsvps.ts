@@ -15,6 +15,7 @@ import {
    updateDirectInviteRsvpValidator,
    updateOpenInviteRsvpValidator,
 } from '../middlewares/rsvps'
+import { authinticate } from '../middlewares/authinticate'
 
 export default (router: express.Router) => {
    router.post(
@@ -37,6 +38,6 @@ export default (router: express.Router) => {
       updateOpenInviteRsvpValidator,
       updateOpenInviteRsvpController,
    )
-   router.get('/rsvp/user/:userid', getRsvpsByUserIdController)
+   router.get('/rsvp/user', authinticate, getRsvpsByUserIdController)
    router.get('/rsvp/event/:eventid', getRsvpsByEventIdController)
 }

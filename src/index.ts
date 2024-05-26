@@ -15,9 +15,11 @@ import createOtpsTable from './migrations/create_otps_table'
 import createUsersTable from './migrations/create_users_table'
 import createGuestsTable from './migrations/create_guest_list_table'
 import createRsvpsTable from './migrations/create_rsvps_table'
+import createMessagesTable from './migrations/create_messages_table'
 import router from './routes'
 import passport from './services/passport'
 import { createConnection } from './utils/dbconnect'
+import { Server as SocketServer } from 'socket.io'
 
 dotenv.config()
 
@@ -53,6 +55,37 @@ app.use(passport.session())
 
 const server = http.createServer(app)
 
+const io = new SocketServer(server, {
+   cors: {
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST'],
+      credentials: true,
+   },
+})
+
+io.on('connection', (socket) => {
+   console.log('a user connected')
+
+   socket.on('join', (channelId) => {
+      console.log(`User joined channel: ${channelId}`)
+      socket.join(channelId)
+   })
+
+   socket.on('leave', (channelId) => {
+      console.log(`User left channel: ${channelId}`)
+      socket.leave(channelId)
+   })
+
+   socket.on('message', (message) => {
+      console.log('Message received:', message)
+      io.to(message.channelid).emit('message', message)
+   })
+
+   socket.on('disconnect', () => {
+      console.log('user disconnected')
+   })
+})
+
 server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
@@ -65,8 +98,8 @@ server.listen(PORT, () => {
       // await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
       // await client.query('DROP TABLE IF EXISTS otps CASCADE')
       // await client.query('DROP TABLE IF EXISTS users CASCADE')
-      await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
-      await client.query('DROP TABLE IF EXISTS guests CASCADE')
+      // await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
+      // await client.query('DROP TABLE IF EXISTS messages CASCADE')
       // console.log('Tables dropped')
       await createUsersTable()
       await createOtpsTable()
@@ -76,6 +109,7 @@ server.listen(PORT, () => {
       await createChannelsTable()
       await createRsvpsTable()
       await createGuestsTable()
+      await createMessagesTable()
       console.log('Tables created')
       await client.end()
    } catch (error) {
