@@ -54,7 +54,7 @@ export const updateDirectInviteRsvpModal = async (
          `
       UPDATE rsvps
       SET status = $1, updated_at = CURRENT_TIMESTAMP
-      WHERE rsvp_id = $2 AND is_open_invite = FALSE
+      WHERE rsvpid = $2 AND is_open_invite = FALSE
       RETURNING *
       `,
          [rsvpData.status, rsvpData.rsvpid],
@@ -77,7 +77,7 @@ export const updateOpenInviteRsvpModal = async (
          `
       UPDATE rsvps
       SET status = $1, updated_at = CURRENT_TIMESTAMP, claimed_by = array_append(claimed_by, $2)
-      WHERE rsvp_id = $3 AND is_open_invite = TRUE AND (claimed_by IS NULL OR array_length(claimed_by, 1) < user_limit)
+      WHERE rsvpid = $3 AND is_open_invite = TRUE AND (claimed_by IS NULL OR array_length(claimed_by, 1) < user_limit)
       RETURNING *
       `,
          [rsvpData.status, rsvpData.userid, rsvpData.rsvpid],

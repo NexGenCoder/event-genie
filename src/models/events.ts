@@ -15,12 +15,17 @@ export const getEventTypesModel = async () => {
 }
 
 export const createEventModel = async (eventData: CreateEventBody) => {
-   const client = await createConnection()
+   const client = await createConnection();
    try {
-      const query = `
-         INSERT INTO events (event_name, start_date_time, end_date_time, description, location, event_type, userid, event_logo) VALUES ($1, $2, $3, $4, $5, $6,$7, $8)
-      `
-      const values = [
+      await client.query('BEGIN'); // Start a transaction
+
+      // Step 1: Insert event into the events table
+      const eventQuery = `
+         INSERT INTO events (event_name, start_date_time, end_date_time, description, location, event_type, userid, event_logo) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING eventid
+      `;
+      const eventValues = [
          eventData.eventName,
          eventData.startDateTime,
          eventData.endDateTime,
@@ -29,20 +34,33 @@ export const createEventModel = async (eventData: CreateEventBody) => {
          eventData.eventType,
          eventData.userId,
          eventData.eventLogo,
-      ]
+      ];
+      const eventResult = await client.query(eventQuery, eventValues);
+      const eventId = eventResult.rows[0].eventid;
 
-      await client.query(query, values)
-      const result = await client.query(
-         'SELECT * FROM events WHERE event_name = $1',
-         [eventData.eventName],
-      )
-      return result.rows[0]
+      // Step 2: Assign default role "host" to the user for the created event
+      const assignRoleQuery = `
+         INSERT INTO user_roles (userid, roleid, eventid) 
+         VALUES ($1, (SELECT roleid FROM roles WHERE role_name = 'host'), $2)
+      `;
+      const assignRoleValues = [eventData.userId, eventId];
+      await client.query(assignRoleQuery, assignRoleValues);
+
+      await client.query('COMMIT'); // Commit the transaction
+
+      // Retrieve and return the created event
+      const eventDetailsQuery = 'SELECT * FROM events WHERE eventid = $1';
+      const eventDetailsValues = [eventId];
+      const eventDetailsResult = await client.query(eventDetailsQuery, eventDetailsValues);
+      return eventDetailsResult.rows[0];
    } catch (error) {
-      throw new Error(`Error creating event: ${error}`)
+      await client.query('ROLLBACK'); // Rollback the transaction if an error occurs
+      throw new Error(`Error creating event: ${error}`);
    } finally {
-      await client.end()
+      await client.end();
    }
-}
+};
+
 
 export const getEventsByUserIdModel = async (userId: string) => {
    const client = await createConnection()

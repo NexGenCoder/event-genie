@@ -70,7 +70,7 @@ export const createOpenInviteRsvpController = async (
 
 /**
  * Update a direct invite RSVP
- * @param req : rsvp_id, status
+ * @param req : rsvpid, status
  * @param res : rsvp
  * @returns
  * */
@@ -96,7 +96,7 @@ export const updateDirectInviteRsvpController = async (
 
 /**
  * Update an open invite RSVP
- * @param req : rsvp_id, status
+ * @param req : rsvpid, status
  * @param res : rsvp
  * @returns
  * */
