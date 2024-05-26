@@ -4,17 +4,17 @@ const createVendorsTable = async () => {
    const client = await createConnection()
    try {
       await client.query(`
-         CREATE TABLE IF NOT EXISTS channel_categories  (
-            VendorID SERIAL PRIMARY KEY NOT NULL,
-            OwnerID INT REFERENCES users(userid),
-            BrandName VARCHAR(255) NOT NULL,
-            BrandLogo TEXT,
-            Location TEXT NOT NULL,
-            Description TEXT,
-            Email VARCHAR(255) NOT NULL,
-            Phone VARCHAR(20) NOT NULL,
-            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+         CREATE TABLE IF NOT EXISTS Vendors  (
+            vendorID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            ownerID UUID REFERENCES users(userid),
+            brandName VARCHAR(255) NOT NULL,
+            brandLogo TEXT,
+            location TEXT NOT NULL,
+            description TEXT,
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(20) NOT NULL,
+            createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
          )
       `)
    } catch (error) {
