@@ -7,10 +7,13 @@ import {
 import { getChannelCategoriesByEventIdModal } from '../models/channelCategoryModel'
 import { createChannelModel, getChannelByIdModel } from '../models/channels'
 import {
+   createChildEventModel,
    createEventModel,
+   getChildEvents,
    getEventDetailsModel,
    getEventsByUserIdModel,
    getEventTypesModel,
+   updateEventModel,
 } from '../models/events'
 import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
 import { isValidUUID } from '../utils/isValidUUID'
@@ -52,7 +55,7 @@ export const createEventController = async (
    try {
       const { userid } = res.locals
 
-      const result = await createEventModel({ ...req.body, userId: userid })
+      const result = await createEventModel({ ...req.body, userid })
       const eventid = result.eventid
       await defaultCategoriesAndChannels(eventid)
       return res
@@ -206,6 +209,69 @@ export const getChannelByIdController = async (
       }
       return res.status(200).json({
          message: 'Channel fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const createChildEventController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { userid } = res.locals
+      const requestBody = req.body
+      const result = await createChildEventModel(requestBody, userid)
+      return res.status(201).json({
+         message: 'Child event created successfully',
+         data: result,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const updateEventController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { userid } = res.locals
+      const { eventid } = req.params
+      const data = await getEventDetailsModel(eventid)
+      if (!data) {
+         return res.status(404).json({ message: 'Event not found' })
+      }
+      if (data.userid !== userid) {
+         return res.status(403).json({ message: 'Unauthorized' })
+      }
+      const result = await updateEventModel({ ...req.body, eventid })
+      return res.status(200).json({
+         message: 'Event updated successfully',
+         data: result,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getChildEventsController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { eventid } = req.params
+      const data = await getChildEvents(eventid)
+      if (data.length === 0) {
+         return res.status(404).json({ message: 'No child events found' })
+      }
+      return res.status(200).json({
+         message: 'Child events fetched successfully',
          data,
       })
    } catch (error) {

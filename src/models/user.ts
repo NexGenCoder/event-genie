@@ -1,4 +1,4 @@
-import { IUser } from 'types/user'
+import { IUpdateUser, IUser } from 'types/user'
 
 import { createConnection } from '../utils/dbconnect'
 
@@ -61,32 +61,6 @@ export const getUserByuseridModel = async (userid: string) => {
    }
 }
 
-export const updateUserProfileModel = async (userid: string, user: IUser) => {
-   const client = await createConnection()
-   try {
-      const result = await client.query(
-         'UPDATE users SET username = $1, email = $2, firstname = $3, lastname = $4, profile_picture = $5, bio = $6, is_mobile_verified = $7, is_email_verified = $8, is_profile_completed = $9 WHERE userid = $10 RETURNING *',
-         [
-            user.username,
-            user.email,
-            user.firstname,
-            user.lastname,
-            user.profile_picture,
-            user.bio,
-            user.is_mobile_verified,
-            user.is_email_verified,
-            user.is_profile_completed,
-            userid,
-         ],
-      )
-      return result.rows[0]
-   } catch (error) {
-      throw new Error(`Error updating user profile: ${error}`)
-   } finally {
-      await client.end()
-   }
-}
-
 export const getUserByEmailModel = async (email: string) => {
    const client = await createConnection()
    try {
@@ -143,15 +117,26 @@ export const createOrUpdateGoogleUserModel = async (user: IUser) => {
       )
       if (existingUser.rows.length > 0) {
          const updateUser = { ...user, is_email_verified: true }
-         await client.query(
-            'UPDATE users SET googleid = $1, profile_picture = $2, is_email_verified = $3 WHERE email = $4',
-            [
-               updateUser.googleid,
-               updateUser.profile_picture,
-               updateUser.is_email_verified,
-               user.email,
-            ],
-         )
+         const updateFields = []
+         const updateValues = []
+         if (!existingUser.rows[0].googleid) {
+            updateFields.push('googleid')
+            updateValues.push(updateUser.googleid)
+         }
+         if (!existingUser.rows[0].profile_picture) {
+            updateFields.push('profile_picture')
+            updateValues.push(updateUser.profile_picture)
+         }
+         if (!existingUser.rows[0].is_email_verified) {
+            updateFields.push('is_email_verified')
+            updateValues.push(true)
+         }
+         if (updateFields.length > 0) {
+            const updateQuery = `UPDATE users SET ${updateFields.map(
+               (field, index) => `${field} = $${index + 1}`,
+            )} WHERE email = $${updateFields.length + 1}`
+            await client.query(updateQuery, [...updateValues, user.email])
+         }
          const updatedUser = {
             userid: existingUser.rows[0].userid,
             ...updateUser,
@@ -188,6 +173,50 @@ export const getAllUsersModel = async () => {
       return result.rows
    } catch (error) {
       throw new Error(`Error getting all users: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
+
+export const updateUserMobileVerification = async (
+   userid: string,
+   mobile: number,
+) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         'UPDATE users SET is_mobile_verified = true , mobile = $1 WHERE userid = $2 RETURNING *',
+         [mobile, userid],
+      )
+      return result.rows[0]
+   } catch (error) {
+      throw new Error(`Error updating user mobile verification: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
+
+export const updateUserProfileModel = async (
+   userid: string,
+   user: IUpdateUser,
+) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         'UPDATE users SET username = $1, firstname = $2, lastname = $3, profile_picture = $4, bio = $5, mobile = $6 WHERE userid = $7 RETURNING *',
+         [
+            user.username,
+            user.firstname,
+            user.lastname,
+            user.profilePicture,
+            user.bio,
+            user.mobile,
+            userid,
+         ],
+      )
+      return result.rows[0]
+   } catch (error) {
+      throw new Error(`Error updating user profile: ${error}`)
    } finally {
       await client.end()
    }

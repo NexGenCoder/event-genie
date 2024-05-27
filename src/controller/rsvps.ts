@@ -3,13 +3,13 @@ import express from 'express'
 import {
    createDirectInviteRsvpModal,
    createOpenInviteRsvpModal,
-   updateDirectInviteRsvpModal,
-   updateOpenInviteRsvpModal,
    getRsvpsByEventIdModal,
    getRsvpsByUserIdModal,
    getRsvpsByUserModal,
+   updateDirectInviteRsvpModal,
+   updateOpenInviteRsvpModal,
 } from '../models/rsvps'
-import { isValidUUID } from './../utils/isValidUUID'
+import { isValidUUID } from '../utils/isValidUUID'
 
 /**
  * Create a direct invite RSVP

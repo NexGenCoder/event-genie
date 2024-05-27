@@ -1,10 +1,10 @@
 import express from 'express'
 
-import { authinticate } from './../middlewares/authinticate'
 import {
-   sendMessageController,
    getMessagesByChannelId,
+   sendMessageController,
 } from '../controller/messages'
+import { authinticate } from '../middlewares/authinticate'
 import { CreateMessageValidator } from '../middlewares/messages'
 
 export default (router: express.Router) => {

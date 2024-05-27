@@ -6,20 +6,20 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
+import { Server as SocketServer } from 'socket.io'
 
 import createChannelCategoriesTable from './migrations/create_channel_categories_table'
 import createChannelsTable from './migrations/create_channels_table'
 import createEventTypeTable from './migrations/create_event_type_table'
 import createEventTable from './migrations/create_events_table'
-import createOtpsTable from './migrations/create_otps_table'
-import createUsersTable from './migrations/create_users_table'
 import createGuestsTable from './migrations/create_guest_list_table'
-import createRsvpsTable from './migrations/create_rsvps_table'
 import createMessagesTable from './migrations/create_messages_table'
+import createOtpsTable from './migrations/create_otps_table'
+import createRsvpsTable from './migrations/create_rsvps_table'
+import createUsersTable from './migrations/create_users_table'
 import router from './routes'
 import passport from './services/passport'
 import { createConnection } from './utils/dbconnect'
-import { Server as SocketServer } from 'socket.io'
 
 dotenv.config()
 
@@ -100,7 +100,9 @@ server.listen(PORT, () => {
       // await client.query('DROP TABLE IF EXISTS users CASCADE')
       // await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
       // await client.query('DROP TABLE IF EXISTS messages CASCADE')
-      // console.log('Tables dropped')
+      // await client.query('DROP TABLE IF EXISTS guests CASCADE')
+
+      // // console.log('Tables dropped')
       await createUsersTable()
       await createOtpsTable()
       await createEventTypeTable()

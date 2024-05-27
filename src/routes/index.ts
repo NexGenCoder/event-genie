@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express'
 
 import authentication from './authentication'
-import events from './events'
-import user from './user'
-import rsvps from './rsvps'
-import messages from './messages '
 import channels from './channels'
+import events from './events'
+import messages from './messages '
+import rsvps from './rsvps'
+import user from './user'
 
 const router = express.Router()
 /**

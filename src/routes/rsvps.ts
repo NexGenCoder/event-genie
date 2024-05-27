@@ -3,19 +3,18 @@ import express from 'express'
 import {
    createDirectInviteRsvpController,
    createOpenInviteRsvpController,
-   updateDirectInviteRsvpController,
-   updateOpenInviteRsvpController,
    getRsvpsByEventIdController,
    getRsvpsByUserIdController,
+   updateDirectInviteRsvpController,
+   updateOpenInviteRsvpController,
 } from '../controller/rsvps'
-
+import { authinticate } from '../middlewares/authinticate'
 import {
    createDirectInviteRsvpValidator,
    createOpenInviteRsvpValidator,
    updateDirectInviteRsvpValidator,
    updateOpenInviteRsvpValidator,
 } from '../middlewares/rsvps'
-import { authinticate } from '../middlewares/authinticate'
 
 export default (router: express.Router) => {
    router.post(

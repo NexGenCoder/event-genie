@@ -1,9 +1,9 @@
 import express from 'express'
-import {
-   sendMessageModel,
-   getMessagesByChannelIdModel,
-} from '../models/messages'
 
+import {
+   getMessagesByChannelIdModel,
+   sendMessageModel,
+} from '../models/messages'
 import { IMessageInput } from '../types/message'
 
 export const sendMessageController = async (
