@@ -7,7 +7,7 @@ import {
    verifyOtpModel,
 } from '../models/otp'
 import {
-   createUserIfNotExistsModel,
+   createNewUserModel,
    getUserByuseridModel,
    updateUserMobileVerification,
    updateUserProfileModel,
@@ -87,7 +87,6 @@ export const verifyOTPController = async (
    try {
       const { mobile, otp } = req.body
       const userid = req.body.userid
-      console.log('🚀 ~ userid:', userid)
 
       const otpData = await getOtpByMobileNumberModel(mobile as number, otp)
       if (!otpData) {
@@ -108,7 +107,7 @@ export const verifyOTPController = async (
       if (userid) {
          userData = await updateUserMobileVerification(userid, mobile)
       } else {
-         userData = await createUserIfNotExistsModel(mobile as number)
+         userData = await createNewUserModel(mobile as number)
       }
 
       const payload = {
@@ -173,7 +172,7 @@ export const logoutController = async (
       }
 
       res.clearCookie('OG-AUTH')
-      return res.redirect('http://localhost:3000/')
+      return res.redirect(`${process.env.CLIENT_URL}/login`)
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })

@@ -17,28 +17,20 @@ export const getUserByUsernameModel = async (username: string) => {
    }
 }
 
-export const createUserIfNotExistsModel = async (mobile: number) => {
+export const createNewUserModel = async (mobile: number) => {
    const client = await createConnection()
    try {
-      const existingUser = await client.query(
-         'SELECT * FROM users WHERE mobile = $1',
-         [mobile],
+      const newUser = { mobile, is_mobile_verified: true }
+      const result = await client.query(
+         'INSERT INTO users (mobile, is_mobile_verified) VALUES ($1, $2) RETURNING *',
+         [newUser.mobile, newUser.is_mobile_verified],
       )
-      if (existingUser.rows.length > 0) {
-         return existingUser.rows[0]
-      } else {
-         const newUser = { mobile, is_mobile_verified: true }
-         const result = await client.query(
-            'INSERT INTO users (mobile, is_mobile_verified) VALUES ($1, $2) RETURNING *',
-            [newUser.mobile, newUser.is_mobile_verified],
-         )
-         const insertId = result.rows[0].userid
-         const userData = await client.query(
-            'SELECT * FROM users WHERE userid = $1',
-            [insertId],
-         )
-         return userData.rows[0]
-      }
+      const insertId = result.rows[0].userid
+      const userData = await client.query(
+         'SELECT * FROM users WHERE userid = $1',
+         [insertId],
+      )
+      return userData.rows[0]
    } catch (error) {
       throw new Error(`Error getting/creating user by mobile: ${error}`)
    } finally {
@@ -202,18 +194,44 @@ export const updateUserProfileModel = async (
 ) => {
    const client = await createConnection()
    try {
-      const result = await client.query(
-         'UPDATE users SET username = $1, firstname = $2, lastname = $3, profile_picture = $4, bio = $5, mobile = $6 WHERE userid = $7 RETURNING *',
-         [
-            user.username,
-            user.firstname,
-            user.lastname,
-            user.profilePicture,
-            user.bio,
-            user.mobile,
-            userid,
-         ],
-      )
+      const updates = []
+      const values = []
+
+      if (user.username) {
+         updates.push('username = $' + (values.length + 1))
+         values.push(user.username)
+      }
+      if (user.firstname) {
+         updates.push('firstname = $' + (values.length + 1))
+         values.push(user.firstname)
+      }
+      if (user.lastname) {
+         updates.push('lastname = $' + (values.length + 1))
+         values.push(user.lastname)
+      }
+      if (user.profilePicture) {
+         updates.push('profile_picture = $' + (values.length + 1))
+         values.push(user.profilePicture)
+      }
+      if (user.bio) {
+         updates.push('bio = $' + (values.length + 1))
+         values.push(user.bio)
+      }
+      if (user.mobile) {
+         updates.push('mobile = $' + (values.length + 1))
+         values.push(user.mobile)
+      }
+
+      if (updates.length === 0) {
+         throw new Error('No valid fields to update')
+      }
+
+      values.push(userid)
+      const query = `UPDATE users SET ${updates.join(', ')} WHERE userid = $${
+         values.length
+      } RETURNING *`
+
+      const result = await client.query(query, values)
       return result.rows[0]
    } catch (error) {
       throw new Error(`Error updating user profile: ${error}`)

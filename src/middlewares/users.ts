@@ -59,13 +59,18 @@ export const updateUserProfileValidator = (
       mobile: Joi.string()
          .length(10)
          .pattern(/^[0-9]+$/)
-         .required()
+         .optional()
          .messages({
             'string.base': `Mobile number should be a type of 'text'`,
             'string.empty': `Mobile number cannot be an empty field`,
             'string.pattern.base': `Mobile number should be a valid number`,
             'string.length': `Mobile number should be 10 digits long`,
          }),
+      email: Joi.string().email().optional().messages({
+         'string.base': `Email should be a type of 'text'`,
+         'string.empty': `Email cannot be an empty field`,
+         'string.email': `Email should be a valid email`,
+      }),
       bio: Joi.string().required().messages({
          'string.base': `Bio should be a type of 'text'`,
          'string.empty': `Bio cannot be an empty field`,

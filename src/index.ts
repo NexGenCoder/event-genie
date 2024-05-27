@@ -57,7 +57,7 @@ const server = http.createServer(app)
 
 const io = new SocketServer(server, {
    cors: {
-      origin: 'http://localhost:3000',
+      origin: process.env.CORS_ORIGIN,
       methods: ['GET', 'POST'],
       credentials: true,
    },
@@ -92,15 +92,15 @@ server.listen(PORT, () => {
 ;(async () => {
    try {
       const client = await createConnection()
-      // await client.query('DROP TABLE IF EXISTS channels CASCADE')
-      // await client.query('DROP TABLE IF EXISTS events CASCADE')
-      // await client.query('DROP TABLE IF EXISTS event_types CASCADE')
-      // await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
-      // await client.query('DROP TABLE IF EXISTS otps CASCADE')
-      // await client.query('DROP TABLE IF EXISTS users CASCADE')
-      // await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
-      // await client.query('DROP TABLE IF EXISTS messages CASCADE')
-      // await client.query('DROP TABLE IF EXISTS guests CASCADE')
+      await client.query('DROP TABLE IF EXISTS channels CASCADE')
+      await client.query('DROP TABLE IF EXISTS events CASCADE')
+      await client.query('DROP TABLE IF EXISTS event_types CASCADE')
+      await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
+      await client.query('DROP TABLE IF EXISTS otps CASCADE')
+      await client.query('DROP TABLE IF EXISTS users CASCADE')
+      await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
+      await client.query('DROP TABLE IF EXISTS messages CASCADE')
+      await client.query('DROP TABLE IF EXISTS guests CASCADE')
 
       // // console.log('Tables dropped')
       await createUsersTable()
