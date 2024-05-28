@@ -127,7 +127,8 @@ export const getEventDetailsController = async (
 ) => {
    try {
       const { eventid } = req.params
-      const data = await getEventDetailsModel(eventid)
+      const { userid } = res.locals
+      const data = await getEventDetailsModel(eventid, userid)
       if (!data) {
          return res.status(404).json({ message: 'Event not found' })
       }
@@ -242,7 +243,7 @@ export const updateEventController = async (
    try {
       const { userid } = res.locals
       const { eventid } = req.params
-      const data = await getEventDetailsModel(eventid)
+      const data = await getEventDetailsModel(eventid, userid)
       if (!data) {
          return res.status(404).json({ message: 'Event not found' })
       }
@@ -266,7 +267,8 @@ export const getChildEventsController = async (
 ) => {
    try {
       const { eventid } = req.params
-      const data = await getChildEvents(eventid)
+      const { userid } = res.locals
+      const data = await getChildEvents(eventid, userid)
       if (data.length === 0) {
          return res.status(404).json({ message: 'No child events found' })
       }

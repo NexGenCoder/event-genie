@@ -19,21 +19,25 @@ import {
 export default (router: express.Router) => {
    router.post(
       '/rsvp/direct',
+      authinticate,
       createDirectInviteRsvpValidator,
       createDirectInviteRsvpController,
    )
    router.post(
       '/rsvp/open',
+      authinticate,
       createOpenInviteRsvpValidator,
       createOpenInviteRsvpController,
    )
    router.put(
       '/rsvp/direct',
+      authinticate,
       updateDirectInviteRsvpValidator,
       updateDirectInviteRsvpController,
    )
    router.put(
       '/rsvp/open',
+      authinticate,
       updateOpenInviteRsvpValidator,
       updateOpenInviteRsvpController,
    )

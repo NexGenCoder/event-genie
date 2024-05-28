@@ -8,18 +8,9 @@ import express from 'express'
 import http from 'http'
 import { Server as SocketServer } from 'socket.io'
 
-import createChannelCategoriesTable from './migrations/create_channel_categories_table'
-import createChannelsTable from './migrations/create_channels_table'
-import createEventTypeTable from './migrations/create_event_type_table'
-import createEventTable from './migrations/create_events_table'
-import createGuestsTable from './migrations/create_guest_list_table'
-import createMessagesTable from './migrations/create_messages_table'
-import createOtpsTable from './migrations/create_otps_table'
-import createRsvpsTable from './migrations/create_rsvps_table'
-import createUsersTable from './migrations/create_users_table'
 import router from './routes'
 import passport from './services/passport'
-import { createConnection } from './utils/dbconnect'
+import migrations from './migrations'
 
 dotenv.config()
 
@@ -90,34 +81,7 @@ server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
 ;(async () => {
-   try {
-      const client = await createConnection()
-      await client.query('DROP TABLE IF EXISTS channels CASCADE')
-      await client.query('DROP TABLE IF EXISTS events CASCADE')
-      await client.query('DROP TABLE IF EXISTS event_types CASCADE')
-      await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
-      await client.query('DROP TABLE IF EXISTS otps CASCADE')
-      await client.query('DROP TABLE IF EXISTS users CASCADE')
-      await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
-      await client.query('DROP TABLE IF EXISTS messages CASCADE')
-      await client.query('DROP TABLE IF EXISTS guests CASCADE')
-
-      // // console.log('Tables dropped')
-      await createUsersTable()
-      await createOtpsTable()
-      await createEventTypeTable()
-      await createEventTable()
-      await createChannelCategoriesTable()
-      await createChannelsTable()
-      await createRsvpsTable()
-      await createGuestsTable()
-      await createMessagesTable()
-      console.log('Tables created')
-      await client.end()
-   } catch (error) {
-      console.error('Error running migration:', error)
-      process.exit(1)
-   }
+   await migrations()
 })()
 
 app.use('/', router())

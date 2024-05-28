@@ -10,6 +10,7 @@ import {
    updateOpenInviteRsvpModal,
 } from '../models/rsvps'
 import { isValidUUID } from '../utils/isValidUUID'
+import { addGuestModel } from '../models/guests'
 
 /**
  * Create a direct invite RSVP
@@ -81,9 +82,12 @@ export const updateDirectInviteRsvpController = async (
 ) => {
    try {
       const rsvp = await updateDirectInviteRsvpModal(req.body)
-      if (rsvp.expiry_at < new Date()) {
-         return res.status(400).json({ message: 'RSVP expired' })
-      }
+      await addGuestModel({
+         eventid: rsvp.eventid,
+         userid: rsvp.userid,
+         role: 'guest',
+         rsvpid: rsvp.rsvpid,
+      })
       return res.status(200).json({
          message: 'Direct invite RSVP updated successfully',
          data: rsvp,
@@ -106,10 +110,8 @@ export const updateOpenInviteRsvpController = async (
    res: express.Response,
 ) => {
    try {
-      const rsvp = await updateOpenInviteRsvpModal(req.body)
-      if (rsvp.expiry_at < new Date()) {
-         return res.status(400).json({ message: 'RSVP expired' })
-      }
+      const { userid } = res.locals
+      const rsvp = await updateOpenInviteRsvpModal({ ...req.body, userid })
       return res.status(200).json({
          message: 'Open invite RSVP updated successfully',
          data: rsvp,

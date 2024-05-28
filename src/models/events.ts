@@ -1,6 +1,7 @@
 import {
    ICreateChildEventBody,
    ICreateEventBody,
+   IEvent,
    IUpdateEvent,
 } from 'types/event'
 
@@ -21,10 +22,13 @@ export const getEventTypesModel = async () => {
 export const createEventModel = async (eventData: ICreateEventBody) => {
    const client = await createConnection()
    try {
-      const query = `
-         INSERT INTO events (event_name, start_date_time, end_date_time, description, location, event_type, userid, event_logo,is_private) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      await client.query('BEGIN')
+      const insertEventQuery = `
+         INSERT INTO events (event_name, start_date_time, end_date_time, description, location, event_type, userid, event_logo, is_private)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         RETURNING eventId
       `
-      const values = [
+      const eventValues = [
          eventData.eventName,
          eventData.startDateTime,
          eventData.endDateTime,
@@ -35,14 +39,26 @@ export const createEventModel = async (eventData: ICreateEventBody) => {
          eventData.eventLogo,
          eventData.isPrivate,
       ]
+      const eventResult = await client.query(insertEventQuery, eventValues)
+      const eventId = eventResult.rows[0].eventid
 
-      await client.query(query, values)
+      const insertHostQuery = `
+         INSERT INTO guests (eventid, userid, role)
+         VALUES ($1, $2, $3)
+      `
+      const hostValues = [eventId, eventData.userid, 'host']
+      await client.query(insertHostQuery, hostValues)
+
+      await client.query('COMMIT')
+
       const result = await client.query(
-         'SELECT * FROM events WHERE event_name = $1',
-         [eventData.eventName],
+         'SELECT * FROM events WHERE eventId = $1',
+         [eventId],
       )
+      console.log('Event created: ', result.rows[0])
       return result.rows[0]
    } catch (error) {
+      await client.query('ROLLBACK')
       throw new Error(`Error creating event: ${error}`)
    } finally {
       await client.end()
@@ -95,7 +111,17 @@ export const getEventsByUserIdModel = async (userId: string) => {
    const client = await createConnection()
    try {
       const query = `
-         SELECT * FROM events WHERE userid = $1 AND parent_eventid IS NULL
+         SELECT 
+            e.*, 
+            g.role,
+            g.created_at AS joining_date
+         FROM 
+            events e
+         LEFT JOIN 
+            guests g ON e.eventId = g.eventid
+         WHERE 
+            (e.userid = $1 OR g.userid = $1) -- Include events where the user is either the creator or a guest
+            AND e.parent_eventid IS NULL
       `
       const values = [userId]
       const result = await client.query(query, values)
@@ -107,13 +133,23 @@ export const getEventsByUserIdModel = async (userId: string) => {
    }
 }
 
-export const getChildEvents = async (eventId: string) => {
+export const getChildEvents = async (eventId: string, userId: string) => {
    const client = await createConnection()
    try {
       const query = `
-         SELECT * FROM events WHERE parent_eventid = $1
+         SELECT 
+            e.*, 
+            g.role,
+            g.created_at AS joining_date
+         FROM 
+            events e
+         LEFT JOIN 
+            guests g ON e.eventId = g.eventid
+         WHERE 
+            e.parent_eventid = $1
+            AND (e.userid = $2 OR g.userid = $2)
       `
-      const values = [eventId]
+      const values = [eventId, userId]
       const result = await client.query(query, values)
       return result.rows
    } catch (error) {
@@ -123,13 +159,26 @@ export const getChildEvents = async (eventId: string) => {
    }
 }
 
-export const getEventDetailsModel = async (eventId: string) => {
+export const getEventDetailsModel = async (
+   eventId: string,
+   userid: string,
+): Promise<IEvent> => {
    const client = await createConnection()
    try {
       const query = `
-         SELECT * FROM events WHERE eventid = $1
+         SELECT 
+            e.*, 
+            g.role,
+            g.created_at AS joining_date
+         FROM 
+            events e
+         LEFT JOIN 
+            guests g ON e.eventId = g.eventid
+         WHERE 
+            e.eventid = $1
+            AND (e.userid = $2 OR g.userid = $2)
       `
-      const values = [eventId]
+      const values = [eventId, userid]
       const result = await client.query(query, values)
       return result.rows[0]
    } catch (error) {

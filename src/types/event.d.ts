@@ -12,6 +12,8 @@ export type IEvent = {
    updated_at: string
    userid: string
    is_private: boolean
+   role: 'host' | 'guest' | 'vendor'
+   joining_date: string
 }
 
 export type ICreateEventBody = {
