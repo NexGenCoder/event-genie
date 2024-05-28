@@ -6,6 +6,7 @@ import events from './events'
 import messages from './messages '
 import rsvps from './rsvps'
 import user from './user'
+import cleanDatabase from './../migrations/cleanDatabase'
 
 const router = express.Router()
 /**
@@ -20,6 +21,16 @@ router.get('/', (req: Request, res: Response) => {
       description:
          'Get Together is a social event planning application that allows users to create and RSVP to events.',
    })
+})
+
+router.post('/cleardatabase', async (req: Request, res: Response) => {
+   const requestPassword = req.body.password
+   if (requestPassword === process.env.CLEAN_DB_PASSWORD) {
+      await cleanDatabase()
+      res.status(200).json({ message: 'Cleaning database' })
+   } else {
+      res.status(401).json({ message: 'Unauthorized' })
+   }
 })
 
 export default (): express.Router => {
