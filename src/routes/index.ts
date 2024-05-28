@@ -7,6 +7,7 @@ import messages from './messages '
 import rsvps from './rsvps'
 import user from './user'
 import cleanDatabase from './../migrations/cleanDatabase'
+import migrations from './../migrations'
 
 const router = express.Router()
 /**
@@ -23,11 +24,14 @@ router.get('/', (req: Request, res: Response) => {
    })
 })
 
-router.post('/cleardatabase', async (req: Request, res: Response) => {
+router.post('/migrations', async (req: Request, res: Response) => {
    const requestPassword = req.body.password
    if (requestPassword === process.env.CLEAN_DB_PASSWORD) {
       await cleanDatabase()
       res.status(200).json({ message: 'Cleaning database' })
+   } else if (requestPassword === process.env.SEED_DB_PASSWORD) {
+      await migrations()
+      res.status(200).json({ message: 'Seeding database' })
    } else {
       res.status(401).json({ message: 'Unauthorized' })
    }
