@@ -81,10 +81,11 @@ export const updateDirectInviteRsvpController = async (
    res: express.Response,
 ) => {
    try {
+      const { userid } = res.locals
       const rsvp = await updateDirectInviteRsvpModal(req.body)
       await addGuestModel({
          eventid: rsvp.eventid,
-         userid: rsvp.userid,
+         userid: userid,
          role: 'guest',
          rsvpid: rsvp.rsvpid,
       })

@@ -106,30 +106,65 @@ export const createChildEventModel = async (
       await client.end()
    }
 }
-
 export const getEventsByUserIdModel = async (userId: string) => {
-   const client = await createConnection()
+   let client
    try {
+      client = await createConnection()
       const query = `
-         SELECT 
-            e.*, 
-            g.role,
-            g.created_at AS joining_date
-         FROM 
-            events e
-         LEFT JOIN 
-            guests g ON e.eventId = g.eventid
-         WHERE 
-            (e.userid = $1 OR g.userid = $1) -- Include events where the user is either the creator or a guest
-            AND e.parent_eventid IS NULL
-      `
+            SELECT 
+                e.eventid, 
+                e.parent_eventid, 
+                e.event_name, 
+                e.start_date_time, 
+                e.end_date_time, 
+                e.description, 
+                e.event_logo, 
+                e.location, 
+                e.event_type, 
+                e.is_private, 
+                e.created_at, 
+                e.updated_at, 
+                e.userid AS host_userid, 
+                g.userid AS guest_userid, 
+                g.role, 
+                g.created_at AS joining_date
+            FROM 
+                events e
+            LEFT JOIN 
+                guests g ON e.eventId = g.eventId
+            WHERE 
+                (e.userId = $1 OR g.userId = $1) -- Include events where the user is either the creator or a guest
+                AND e.parent_eventId IS NULL
+        `
       const values = [userId]
       const result = await client.query(query, values)
-      return result.rows
+
+      const eventMap = new Map()
+
+      result.rows.forEach((row) => {
+         if (!eventMap.has(row.eventid)) {
+            eventMap.set(row.eventid, row)
+         } else {
+            const existing = eventMap.get(row.eventid)
+            if (row.role === 'host' || existing.role === 'host') {
+               existing.role = 'host'
+            } else {
+               existing.role = 'guest'
+            }
+         }
+      })
+
+      const uniqueEvents = Array.from(eventMap.values())
+
+      return uniqueEvents
    } catch (error) {
-      throw new Error(`Error getting events by user id: ${error}`)
+      throw new Error(
+         `Error getting events by user ID ${userId}: ${error.message}`,
+      )
    } finally {
-      await client.end()
+      if (client) {
+         await client.end()
+      }
    }
 }
 
