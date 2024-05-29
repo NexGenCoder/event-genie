@@ -9,6 +9,7 @@ import createRsvpsTable from './create_rsvps_table'
 import createUsersTable from './create_users_table'
 import createDirectMessagesTable from './create_direct_messages_table'
 import createConversationsTable from './create_conversations _table'
+import createVendorsTable from './create_vendor_table'
 
 const migrations = async () => {
    try {
@@ -23,6 +24,7 @@ const migrations = async () => {
       await createMessagesTable()
       await createConversationsTable()
       await createDirectMessagesTable()
+      await createVendorsTable()
    } catch (error) {
       console.error('Error creating tables:', error)
       throw error

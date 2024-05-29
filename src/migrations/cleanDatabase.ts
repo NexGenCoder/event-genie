@@ -13,6 +13,7 @@ const cleanDatabase = async () => {
       await client.query('DROP TABLE IF EXISTS guests CASCADE')
       await client.query('DROP TABLE IF EXISTS direct_messages CASCADE')
       await client.query('DROP TABLE IF EXISTS conversations CASCADE')
+      await client.query('DROP TABLE IF EXIST VENDOR CASCADE')
    } catch (error) {
       console.error('Error creating tables:', error)
       throw error
