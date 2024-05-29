@@ -17,6 +17,7 @@ import {
 } from '../models/events'
 import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
 import { isValidUUID } from '../utils/isValidUUID'
+import { getGuestsModel, getGuestDetailsModel } from '../models/guests'
 
 /**
  * Get all event types
@@ -274,6 +275,47 @@ export const getChildEventsController = async (
       }
       return res.status(200).json({
          message: 'Child events fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getGuestsController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { eventid } = req.params
+      const { userid } = res.locals
+      const data = await getGuestsModel(eventid, userid)
+      if (data.length === 0) {
+         return res.status(404).json({ message: 'No guests found' })
+      }
+      return res.status(200).json({
+         message: 'Guests fetched successfully',
+         data,
+      })
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
+}
+
+export const getGuestDetailsController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { userid } = req.params
+      const data = await getGuestDetailsModel(userid)
+      if (!data) {
+         return res.status(404).json({ message: 'Guest not found' })
+      }
+      return res.status(200).json({
+         message: 'Guest details fetched successfully',
          data,
       })
    } catch (error) {

@@ -11,6 +11,7 @@ import { Server as SocketServer } from 'socket.io'
 import router from './routes'
 import passport from './services/passport'
 import migrations from './migrations'
+import { createConnection } from './utils/dbconnect'
 
 dotenv.config()
 
@@ -55,8 +56,6 @@ const io = new SocketServer(server, {
 })
 
 io.on('connection', (socket) => {
-   console.log('a user connected')
-
    socket.on('join', (channelId) => {
       console.log(`User joined channel: ${channelId}`)
       socket.join(channelId)
@@ -81,6 +80,9 @@ server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
 ;(async () => {
+   const client = await createConnection()
+   await client.query('DROP TABLE IF EXISTS conversations CASCADE')
+   await client.query('DROP TABLE IF EXISTS direct_messages CASCADE')
    await migrations()
 })()
 

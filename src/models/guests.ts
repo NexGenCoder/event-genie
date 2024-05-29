@@ -37,7 +37,6 @@ export const addGuestModel = async (guestData: IGuest): Promise<IGuest> => {
       }
 
       const result = await client.query(query, values)
-      console.log('Guest added: ', result.rows[0])
       return result.rows[0]
    } catch (error) {
       console.error('Error adding guest: ', error)
@@ -47,19 +46,74 @@ export const addGuestModel = async (guestData: IGuest): Promise<IGuest> => {
    }
 }
 
-export const getGuestsModel = async (eventid: string): Promise<IGuest[]> => {
+export const getGuestsModel = async (eventid: string, userid: string) => {
    const client = await createConnection()
    try {
       const result = await client.query(
          `
-        SELECT * FROM guests
-        WHERE eventid = $1
-        `,
+         SELECT
+            g.guestlistId,
+            g.eventid,
+            g.userid,
+            g.rsvpId,
+            g.role,
+            u.username,
+            u.firstname,
+            u.lastname,
+            u.profile_picture,
+            u.bio
+         FROM guests g
+         JOIN users u ON g.userid = u.userid
+         WHERE g.eventid = $1
+         `,
          [eventid],
+      )
+
+      const guests = result.rows
+      const specificUser = guests.find((guest) => guest.userid === userid)
+
+      if (!specificUser) {
+         console.warn(
+            `User with userid ${userid} is not in the guest list for event ${eventid}`,
+         )
+         throw new Error(
+            `User with userid ${userid} is not in the guest list for event ${eventid}`,
+         )
+      }
+
+      return guests
+   } catch (error) {
+      console.error('Error getting guests: ', error)
+      throw error
+   } finally {
+      client.end()
+   }
+}
+export const getGuestDetailsModel = async (userid: string) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         `
+         SELECT
+            g.guestlistId,
+            g.eventid,
+            g.userid,
+            g.rsvpId,
+            g.role,
+            u.username,
+            u.firstname,
+            u.lastname,
+            u.profile_picture,
+            u.bio
+         FROM guests g
+         JOIN users u ON g.userid = u.userid
+         WHERE g.userid = $1
+         `,
+         [userid],
       )
       return result.rows
    } catch (error) {
-      console.error('Error getting guests: ', error)
+      console.error('Error getting guest details: ', error)
       throw error
    } finally {
       client.end()

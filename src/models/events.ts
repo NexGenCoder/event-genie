@@ -55,7 +55,6 @@ export const createEventModel = async (eventData: ICreateEventBody) => {
          'SELECT * FROM events WHERE eventId = $1',
          [eventId],
       )
-      console.log('Event created: ', result.rows[0])
       return result.rows[0]
    } catch (error) {
       await client.query('ROLLBACK')

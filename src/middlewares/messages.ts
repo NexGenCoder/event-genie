@@ -60,3 +60,40 @@ export const CreateMessageValidator = (
    }
    next()
 }
+
+export const CreateDirectMessageValidator = (
+   req: express.Request,
+   res: express.Response,
+   next: express.NextFunction,
+) => {
+   const schema = Joi.object({
+      senderid: Joi.string().required().messages({
+         'string.base': `Sender ID should be a type of 'text'`,
+         'string.empty': `Sender ID cannot be an empty field`,
+         'any.required': `Sender ID is required`,
+      }),
+      receiverid: Joi.string().required().messages({
+         'string.base': `Receiver ID should be a type of 'text'`,
+         'string.empty': `Receiver ID cannot be an empty field`,
+         'any.required': `Receiver ID is required`,
+      }),
+      type: Joi.string().valid('text', 'image', 'video').required().messages({
+         'string.base': `Type should be a type of 'text'`,
+         'any.only': `Type must be one of 'text', 'image', or 'video'`,
+         'any.required': `Type is required`,
+      }),
+      content: Joi.string().required().messages({
+         'string.base': `Content should be a type of 'text'`,
+         'string.empty': `Content cannot be an empty field`,
+         'any.required': `Content is required`,
+      }),
+   })
+
+   const { error } = schema.validate(req.body)
+   if (error) {
+      return res.status(400).json({
+         message: error.details[0].message,
+      })
+   }
+   next()
+}

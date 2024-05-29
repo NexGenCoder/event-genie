@@ -7,6 +7,8 @@ import createMessagesTable from './create_messages_table'
 import createOtpsTable from './create_otps_table'
 import createRsvpsTable from './create_rsvps_table'
 import createUsersTable from './create_users_table'
+import createDirectMessagesTable from './create_direct_messages_table'
+import createConversationsTable from './create_conversations _table'
 
 const migrations = async () => {
    try {
@@ -19,6 +21,8 @@ const migrations = async () => {
       await createRsvpsTable()
       await createGuestsTable()
       await createMessagesTable()
+      await createConversationsTable()
+      await createDirectMessagesTable()
    } catch (error) {
       console.error('Error creating tables:', error)
       throw error

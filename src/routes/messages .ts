@@ -1,11 +1,16 @@
 import express from 'express'
 
 import {
-   getMessagesByChannelId,
+   getMessagesByChannelIdController,
    sendMessageController,
+   sendDirectMessageController,
+   getMessagesByGuestListIdController,
 } from '../controller/messages'
 import { authinticate } from '../middlewares/authinticate'
-import { CreateMessageValidator } from '../middlewares/messages'
+import {
+   CreateDirectMessageValidator,
+   CreateMessageValidator,
+} from '../middlewares/messages'
 
 export default (router: express.Router) => {
    router.post(
@@ -17,6 +22,17 @@ export default (router: express.Router) => {
    router.get(
       '/channels/:channelid/messages',
       authinticate,
-      getMessagesByChannelId,
+      getMessagesByChannelIdController,
+   )
+   router.post(
+      `/chats`,
+      authinticate,
+      CreateDirectMessageValidator,
+      sendDirectMessageController,
+   )
+   router.get(
+      '/chats/:user1id/:user2id',
+      authinticate,
+      getMessagesByGuestListIdController,
    )
 }

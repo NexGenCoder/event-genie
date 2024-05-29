@@ -12,7 +12,7 @@ const createChannelsTable = async () => {
             icon VARCHAR(300),
             type VARCHAR(10) CHECK (type IN ('text', 'voice')),
             description TEXT,
-            is_private BOOLEAN DEFAULT TRUE,
+            is_private BOOLEAN DEFAULT TRUE, 
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (categoryid) REFERENCES channel_categories(categoryid)

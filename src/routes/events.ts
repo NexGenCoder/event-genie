@@ -12,6 +12,8 @@ import {
    getEventsByUserIdController,
    getEventTypesController,
    updateEventController,
+   getGuestsController,
+   getGuestDetailsController,
 } from '../controller/events'
 import { authinticate } from '../middlewares/authinticate'
 import {
@@ -67,4 +69,6 @@ export default (router: express.Router) => {
       updateEventController,
    )
    router.get('/event/child/:eventid', authinticate, getChildEventsController)
+   router.get('/event/guests/:eventid', authinticate, getGuestsController)
+   router.get('/event/guest/:userid', authinticate, getGuestDetailsController)
 }
