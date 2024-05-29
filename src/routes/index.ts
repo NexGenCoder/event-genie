@@ -5,6 +5,7 @@ import channels from './channels'
 import events from './events'
 import messages from './messages '
 import rsvps from './rsvps'
+import vendors from './vendors'
 import user from './user'
 import cleanDatabase from './../migrations/cleanDatabase'
 import migrations from './../migrations'
@@ -44,5 +45,6 @@ export default (): express.Router => {
    rsvps(router)
    messages(router)
    channels(router)
+   vendors(router)
    return router
 }

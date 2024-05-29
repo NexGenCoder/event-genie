@@ -12,6 +12,7 @@ import router from './routes'
 import passport from './services/passport'
 import migrations from './migrations'
 import { createConnection } from './utils/dbconnect'
+import createVendorsTable from './migrations/create_vendor_table'
 
 dotenv.config()
 
