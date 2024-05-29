@@ -6,17 +6,11 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
+import { Server as SocketServer } from 'socket.io'
 
-import createChannelCategoriesTable from './migrations/create_channel_categories_table'
-import createChannelsTable from './migrations/create_channels_table'
-import createEventTypeTable from './migrations/create_event_type_table'
-import createEventTable from './migrations/create_events_table'
-import createOtpsTable from './migrations/create_otps_table'
-import createUsersTable from './migrations/create_users_table'
-import createGuestsTable from './migrations/create_guest_list_table'
-import createRsvpsTable from './migrations/create_rsvps_table'
 import router from './routes'
 import passport from './services/passport'
+import migrations from './migrations'
 import { createConnection } from './utils/dbconnect'
 import createVendorsTable from './migrations/create_vendor_table'
 
@@ -54,36 +48,43 @@ app.use(passport.session())
 
 const server = http.createServer(app)
 
+const io = new SocketServer(server, {
+   cors: {
+      origin: process.env.CORS_ORIGIN,
+      methods: ['GET', 'POST'],
+      credentials: true,
+   },
+})
+
+io.on('connection', (socket) => {
+   socket.on('join', (channelId) => {
+      console.log(`User joined channel: ${channelId}`)
+      socket.join(channelId)
+   })
+
+   socket.on('leave', (channelId) => {
+      console.log(`User left channel: ${channelId}`)
+      socket.leave(channelId)
+   })
+
+   socket.on('message', (message) => {
+      console.log('Message received:', message)
+      io.to(message.channelid).emit('message', message)
+   })
+
+   socket.on('disconnect', () => {
+      console.log('user disconnected')
+   })
+})
+
 server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
 ;(async () => {
-   try {
-      const client = await createConnection()
-      // await client.query('DROP TABLE IF EXISTS channels CASCADE')
-      // await client.query('DROP TABLE IF EXISTS events CASCADE')
-      // await client.query('DROP TABLE IF EXISTS event_types CASCADE')
-      // await client.query('DROP TABLE IF EXISTS channel_categories CASCADE')
-      // await client.query('DROP TABLE IF EXISTS otps CASCADE')
-      // await client.query('DROP TABLE IF EXISTS users CASCADE')
-      await client.query('DROP TABLE IF EXISTS rsvps CASCADE')
-      await client.query('DROP TABLE IF EXISTS guests CASCADE')
-      // console.log('Tables dropped')
-      await createUsersTable()
-      await createOtpsTable()
-      await createEventTypeTable()
-      await createEventTable()
-      await createChannelCategoriesTable()
-      await createChannelsTable()
-      await createRsvpsTable()
-      await createGuestsTable()
-      await createVendorsTable()
-      console.log('Tables created')
-      await client.end()
-   } catch (error) {
-      console.error('Error running migration:', error)
-      process.exit(1)
-   }
+   const client = await createConnection()
+   await client.query('DROP TABLE IF EXISTS conversations CASCADE')
+   await client.query('DROP TABLE IF EXISTS direct_messages CASCADE')
+   await migrations()
 })()
 
 app.use('/', router())

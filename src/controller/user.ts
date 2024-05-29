@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getUserByUsernameModel, getAllUsersModel } from '../models/user'
+import { getAllUsersModel, getUserByUsernameModel } from '../models/user'
 
 /**
  * Verify OTP for Sign in or Sign up

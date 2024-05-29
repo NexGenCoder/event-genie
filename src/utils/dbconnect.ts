@@ -8,6 +8,10 @@ const dbConfig: ClientConfig = {
    database: process.env.DB_NAME,
    password: process.env.DB_PASSWORD,
    port: parseInt(process.env.DB_PORT as string),
+   ssl:
+      process.env.NODE_ENV === 'production'
+         ? { rejectUnauthorized: false }
+         : false,
 }
 
 export const createConnection = async (): Promise<Client> => {

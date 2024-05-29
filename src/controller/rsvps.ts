@@ -3,12 +3,14 @@ import express from 'express'
 import {
    createDirectInviteRsvpModal,
    createOpenInviteRsvpModal,
-   updateDirectInviteRsvpModal,
-   updateOpenInviteRsvpModal,
    getRsvpsByEventIdModal,
    getRsvpsByUserIdModal,
+   getRsvpsByUserModal,
+   updateDirectInviteRsvpModal,
+   updateOpenInviteRsvpModal,
 } from '../models/rsvps'
-import { isValidUUID } from './../utils/isValidUUID'
+import { isValidUUID } from '../utils/isValidUUID'
+import { addGuestModel } from '../models/guests'
 
 /**
  * Create a direct invite RSVP
@@ -22,6 +24,17 @@ export const createDirectInviteRsvpController = async (
    res: express.Response,
 ) => {
    try {
+      const existingRsvp = await getRsvpsByUserIdModal(req.body.userid)
+      if (existingRsvp.length > 0) {
+         const rsvp = existingRsvp[0]
+         if (
+            rsvp.status === 'pending' &&
+            rsvp.expiry_at > new Date() &&
+            rsvp.eventid === req.body.eventid
+         ) {
+            return res.status(400).json({ message: 'RSVP already exists' })
+         }
+      }
       const rsvp = await createDirectInviteRsvpModal(req.body)
       return res.status(201).json({
          message: 'Direct invite RSVP created successfully',
@@ -68,10 +81,14 @@ export const updateDirectInviteRsvpController = async (
    res: express.Response,
 ) => {
    try {
+      const { userid } = res.locals
       const rsvp = await updateDirectInviteRsvpModal(req.body)
-      if (rsvp.expiry_at < new Date()) {
-         return res.status(400).json({ message: 'RSVP expired' })
-      }
+      await addGuestModel({
+         eventid: rsvp.eventid,
+         userid: userid,
+         role: 'guest',
+         rsvpid: rsvp.rsvpid,
+      })
       return res.status(200).json({
          message: 'Direct invite RSVP updated successfully',
          data: rsvp,
@@ -94,10 +111,8 @@ export const updateOpenInviteRsvpController = async (
    res: express.Response,
 ) => {
    try {
-      const rsvp = await updateOpenInviteRsvpModal(req.body)
-      if (rsvp.expiry_at < new Date()) {
-         return res.status(400).json({ message: 'RSVP expired' })
-      }
+      const { userid } = res.locals
+      const rsvp = await updateOpenInviteRsvpModal({ ...req.body, userid })
       return res.status(200).json({
          message: 'Open invite RSVP updated successfully',
          data: rsvp,
@@ -151,12 +166,13 @@ export const getRsvpsByUserIdController = async (
    res: express.Response,
 ) => {
    try {
-      const userid = req.params.userid
+      const { userid } = res.locals
+
       if (isValidUUID(userid) === false) {
          return res.status(400).json({ message: 'Invalid user id' })
       }
-      const rsvps = await getRsvpsByUserIdModal(userid)
-      if (rsvps.length === 0) {
+      const rsvps = await getRsvpsByUserModal(userid)
+      if (rsvps[0].rsvpid === null) {
          return res.status(404).json({ message: 'No RSVPs found' })
       }
       return res.status(200).json({

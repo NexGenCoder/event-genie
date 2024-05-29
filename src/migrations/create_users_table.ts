@@ -18,7 +18,7 @@ const createUsersTable = async () => {
         updated_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         is_mobile_verified BOOLEAN DEFAULT FALSE,
         is_email_verified BOOLEAN DEFAULT FALSE,
-        is_profile_completed BOOLEAN DEFAULT TRUE,
+        is_profile_completed BOOLEAN DEFAULT FALSE,
         is_account_deleted BOOLEAN DEFAULT FALSE,
         is_account_suspended BOOLEAN DEFAULT FALSE
       )
