@@ -13,8 +13,8 @@ const createVendorsTable = async () => {
             description TEXT,
             email VARCHAR(255) NOT NULL,
             phone VARCHAR(20) NOT NULL,
-            createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-            updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
          )
       `)
    } catch (error) {
