@@ -89,6 +89,9 @@ Make sure you have the following installed:
 
    The server should now be running on [http://localhost:3001](http://localhost:3001).
 
+8. **API docs**
+   [Link](https://github.com/NexGenCoder/event-genie-backend/blob/master/api-docs.md)
+
 ## Contact
 
 If you have any questions or feedback, please reach out to us at @sahsisunny.
