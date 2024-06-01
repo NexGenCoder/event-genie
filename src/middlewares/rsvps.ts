@@ -103,11 +103,6 @@ export const updateOpenInviteRsvpValidator = (
          'string.empty': `Rsvp id cannot be an empty field`,
          'string.pattern.base': `Rsvp id should be a valid string`,
       }),
-      status: Joi.string().valid('accepted', 'declined').required().messages({
-         'string.base': `Status should be a type of 'text'`,
-         'string.empty': `Status cannot be an empty field`,
-         'string.pattern.base': `Status should be a valid string`,
-      }),
    })
 
    const { error } = schema.validate(req.body)

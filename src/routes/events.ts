@@ -11,9 +11,9 @@ import {
    getEventDetailsController,
    getEventsByUserIdController,
    getEventTypesController,
-   updateEventController,
-   getGuestsController,
    getGuestDetailsController,
+   getGuestsController,
+   updateEventController,
 } from '../controller/events'
 import { authinticate } from '../middlewares/authinticate'
 import {

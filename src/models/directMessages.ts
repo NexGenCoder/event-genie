@@ -1,4 +1,5 @@
 import { IMessage, IMessageInput } from 'types/message'
+
 import { createConnection } from '../utils/dbconnect'
 
 export const sendDirectMessageModel = async (

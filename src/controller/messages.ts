@@ -1,14 +1,14 @@
 import express from 'express'
 
 import {
+   getChatMessagesWithUserDetails,
+   sendDirectMessageModel,
+} from '../models/directMessages'
+import {
    getMessagesByChannelIdModel,
    sendMessageModel,
 } from '../models/messages'
 import { IMessageInput } from '../types/message'
-import {
-   getChatMessagesWithUserDetails,
-   sendDirectMessageModel,
-} from '../models/directMessages'
 
 export const sendMessageController = async (
    req: express.Request,

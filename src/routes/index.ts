@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express'
 
+import migrations from '../migrations'
+import cleanDatabase from '../migrations/cleanDatabase'
 import authentication from './authentication'
 import channels from './channels'
 import events from './events'
 import messages from './messages '
 import rsvps from './rsvps'
-import vendors from './vendors'
 import user from './user'
-import cleanDatabase from './../migrations/cleanDatabase'
-import migrations from './../migrations'
+import vendors from './vendors'
 
 const router = express.Router()
 /**

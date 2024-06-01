@@ -15,9 +15,9 @@ import {
    getEventTypesModel,
    updateEventModel,
 } from '../models/events'
+import { getGuestDetailsModel, getGuestsModel } from '../models/guests'
 import { defaultCategoriesAndChannels } from '../utils/default/defaultCategoriesAndChannels'
 import { isValidUUID } from '../utils/isValidUUID'
-import { getGuestsModel, getGuestDetailsModel } from '../models/guests'
 
 /**
  * Get all event types

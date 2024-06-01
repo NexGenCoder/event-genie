@@ -1,5 +1,6 @@
 import express from 'express'
 
+import { addGuestModel } from '../models/guests'
 import {
    createDirectInviteRsvpModal,
    createOpenInviteRsvpModal,
@@ -10,7 +11,6 @@ import {
    updateOpenInviteRsvpModal,
 } from '../models/rsvps'
 import { isValidUUID } from '../utils/isValidUUID'
-import { addGuestModel } from '../models/guests'
 
 /**
  * Create a direct invite RSVP

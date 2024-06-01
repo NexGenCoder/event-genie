@@ -2,9 +2,9 @@ import express from 'express'
 
 import {
    getMessagesByChannelIdController,
-   sendMessageController,
-   sendDirectMessageController,
    getMessagesByGuestListIdController,
+   sendDirectMessageController,
+   sendMessageController,
 } from '../controller/messages'
 import { authinticate } from '../middlewares/authinticate'
 import {

@@ -8,11 +8,9 @@ import express from 'express'
 import http from 'http'
 import { Server as SocketServer } from 'socket.io'
 
+import migrations from './migrations'
 import router from './routes'
 import passport from './services/passport'
-import migrations from './migrations'
-import { createConnection } from './utils/dbconnect'
-import createVendorsTable from './migrations/create_vendor_table'
 
 dotenv.config()
 
@@ -81,9 +79,6 @@ server.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}`)
 })
 ;(async () => {
-   const client = await createConnection()
-   await client.query('DROP TABLE IF EXISTS conversations CASCADE')
-   await client.query('DROP TABLE IF EXISTS direct_messages CASCADE')
    await migrations()
 })()
 

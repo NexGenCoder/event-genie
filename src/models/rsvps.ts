@@ -74,6 +74,20 @@ export const updateOpenInviteRsvpModal = async (
 ): Promise<IRsvp> => {
    const client = await createConnection()
    try {
+      // check if user has already claimed an open invite check using user id
+      const checkClaimed = await client.query(
+         `
+      SELECT * FROM rsvps
+      WHERE rsvpid = $1 AND $2 = ANY(claimed_by)
+      `,
+         [rsvpData.rsvpid, rsvpData.userId],
+      )
+      //   if user id in claimed_by array, return error
+      const claimedBy = checkClaimed.rows[0]?.claimed_by
+      console.log('🚀 ~ claimedBy:', claimedBy)
+      if (claimedBy && claimedBy.includes(rsvpData.userId)) {
+         throw new Error('User has already claimed this open invite')
+      }
       const result = await client.query(
          `
       UPDATE rsvps
@@ -83,6 +97,7 @@ export const updateOpenInviteRsvpModal = async (
       `,
          [rsvpData.status, rsvpData.userid, rsvpData.rsvpid],
       )
+      console.log(result.rows[0])
       return result.rows[0]
    } catch (error) {
       console.error('Error updating open invite RSVP: ', error)

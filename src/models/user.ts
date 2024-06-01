@@ -239,3 +239,60 @@ export const updateUserProfileModel = async (
       await client.end()
    }
 }
+
+export interface CreateUserBody {
+   username: string
+   firstName: string
+   lastName: string
+   email: string
+   mobile: string
+   profilePicture: string
+   bio: string | null
+}
+
+export const CreateDummyUsersModel = async (userBody: CreateUserBody) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         `
+      INSERT INTO users (
+        username,
+        firstname,
+        lastname,
+        email,
+        mobile,
+        profile_picture,
+        bio
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `,
+         [
+            userBody.username,
+            userBody.firstName,
+            userBody.lastName,
+            userBody.email,
+            userBody.mobile,
+            userBody.profilePicture,
+            userBody.bio,
+         ],
+      )
+
+      return result.rows[0]
+   } catch (error) {
+      throw new Error(`Error creating user: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
+
+// get the users ids array
+export const getUsersIds = async () => {
+   const client = await createConnection()
+   try {
+      const result = await client.query('SELECT userid FROM users')
+      return result.rows
+   } catch (error) {
+      throw new Error(`Error getting users ids: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
