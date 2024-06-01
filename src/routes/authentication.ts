@@ -4,6 +4,7 @@ import {
    getSelfController,
    googleAuthCallbackController,
    googleAuthController,
+   loginUsingDemoUsernameController,
    logoutController,
    sendOTPController,
    updateUserDetailsController,
@@ -29,4 +30,5 @@ export default (router: express.Router) => {
    router.get('/auth/logout', authinticate, logoutController)
    router.get('/auth/google', googleAuthController)
    router.get('/auth/google/callback', googleAuthCallbackController)
+   router.post('/auth/demo-user-login', loginUsingDemoUsernameController)
 }

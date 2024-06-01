@@ -5,7 +5,8 @@ export const dummyUsers = [
       lastName: 'Verma',
       email: 'rahul.verma@example.com',
       mobile: '9123456789',
-      profilePicture: 'https://example.com/profiles/rahul_verma.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hello, I'm Rahul!",
    },
    {
@@ -14,7 +15,8 @@ export const dummyUsers = [
       lastName: 'Sharma',
       email: 'anita.sharma@example.com',
       mobile: '9876543210',
-      profilePicture: 'https://example.com/profiles/anita_sharma.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hi, I'm Anita!",
    },
    {
@@ -23,7 +25,8 @@ export const dummyUsers = [
       lastName: 'Kumar',
       email: 'vijay.kumar@example.com',
       mobile: '9234567890',
-      profilePicture: 'https://example.com/profiles/vijay_kumar.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hey there, I'm Vijay!",
    },
    {
@@ -32,7 +35,8 @@ export const dummyUsers = [
       lastName: 'Patel',
       email: 'priya.patel@example.com',
       mobile: '9345678901',
-      profilePicture: 'https://example.com/profiles/priya_patel.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hello, I'm Priya!",
    },
    {
@@ -41,7 +45,8 @@ export const dummyUsers = [
       lastName: 'Singh',
       email: 'arjun.singh@example.com',
       mobile: '9456789012',
-      profilePicture: 'https://example.com/profiles/arjun_singh.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hi, I'm Arjun!",
    },
    {
@@ -50,7 +55,8 @@ export const dummyUsers = [
       lastName: 'Gupta',
       email: 'rekha.gupta@example.com',
       mobile: '9567890123',
-      profilePicture: 'https://example.com/profiles/rekha_gupta.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hey there, I'm Rekha!",
    },
    {
@@ -59,7 +65,8 @@ export const dummyUsers = [
       lastName: 'Nair',
       email: 'suresh.nair@example.com',
       mobile: '9678901234',
-      profilePicture: 'https://example.com/profiles/suresh_nair.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hello, I'm Suresh!",
    },
    {
@@ -68,7 +75,8 @@ export const dummyUsers = [
       lastName: 'Rao',
       email: 'neha.rao@example.com',
       mobile: '9789012345',
-      profilePicture: 'https://example.com/profiles/neha_rao.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hi, I'm Neha!",
    },
    {
@@ -77,7 +85,8 @@ export const dummyUsers = [
       lastName: 'Das',
       email: 'amit.das@example.com',
       mobile: '9890123456',
-      profilePicture: 'https://example.com/profiles/amit_das.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hey there, I'm Amit!",
    },
    {
@@ -86,7 +95,8 @@ export const dummyUsers = [
       lastName: 'Mehta',
       email: 'kavita.mehta@example.com',
       mobile: '9901234567',
-      profilePicture: 'https://example.com/profiles/kavita_mehta.png',
+      profilePicture:
+         'https://res.cloudinary.com/dspyieeio/image/upload/v1716784328/linktree/xbqxnbcgebyirzvlgfm0.jpg',
       bio: "Hello, I'm Kavita!",
    },
 ]

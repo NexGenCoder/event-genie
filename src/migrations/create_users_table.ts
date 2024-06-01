@@ -7,11 +7,11 @@ const createUsersTable = async () => {
       CREATE TABLE IF NOT EXISTS users (
         userid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         googleid VARCHAR(36) UNIQUE,
-        username VARCHAR(16),
+        username VARCHAR(16) UNIQUE,
         firstname VARCHAR(16),
         lastname VARCHAR(16),
         email VARCHAR(36),
-        mobile VARCHAR(20),
+        mobile VARCHAR(20) UNIQUE,
         profile_picture VARCHAR(255),
         bio TEXT,
         created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,

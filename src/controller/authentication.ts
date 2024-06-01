@@ -9,6 +9,7 @@ import {
 import {
    createNewUserModel,
    getUserByuseridModel,
+   getUserByUsernameModel,
    updateUserMobileVerification,
    updateUserProfileModel,
 } from '../models/user'
@@ -233,4 +234,32 @@ export const googleAuthCallbackController = (
 
       return res.status(200).redirect(`${process.env.CLIENT_URL}`)
    })(req, res)
+}
+
+export const loginUsingDemoUsernameController = async (
+   req: express.Request,
+   res: express.Response,
+) => {
+   try {
+      const { username } = req.body
+      const user = await getUserByUsernameModel(username)
+      if (!user) {
+         return res.status(404).json({ message: 'User not found' })
+      }
+      const payload = {
+         userid: user.userid,
+      }
+      const token = await generateJWT(payload)
+      res.cookie('OG-AUTH', token, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+      })
+      return res.status(200).json({
+         message: 'User logged in successfully',
+         data: user,
+      })
+   } catch (err) {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+   }
 }

@@ -11,7 +11,8 @@ export const insertVendorsDummyData = async () => {
       return
    }
 
-   for (const vendor of vendorsData) {
+   for (let i = 0; i <= 9; i++) {
+      const vendor = vendorsData[i]
       const vendorBody: CreateVendorBody = {
          brandName: vendor.brand_name,
          brandLogo: vendor.brand_logo,
@@ -19,7 +20,7 @@ export const insertVendorsDummyData = async () => {
          description: vendor.description,
          email: vendor.email,
          phone: vendor.phone,
-         ownerId: userIds[Math.floor(Math.random() * userIds.length)].id,
+         ownerId: userIds[i].userid,
       }
 
       try {

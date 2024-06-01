@@ -1,5 +1,5 @@
 import { dummyUsers } from '../../data/users'
-import { CreateDummyUsersModel, CreateUserBody } from '../../models/user'
+import { CreateOrUpdateUserModel, CreateUserBody } from '../../models/user'
 
 export const insertDummyUsers = async () => {
    for (const user of dummyUsers) {
@@ -14,7 +14,7 @@ export const insertDummyUsers = async () => {
       }
 
       try {
-         await CreateDummyUsersModel(userBody)
+         await CreateOrUpdateUserModel(userBody)
          console.log(`User ${user.username} inserted successfully.`)
       } catch (error) {
          console.error(`Error inserting user ${user.username}:`, error)

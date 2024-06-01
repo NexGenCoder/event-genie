@@ -250,21 +250,36 @@ export interface CreateUserBody {
    bio: string | null
 }
 
-export const CreateDummyUsersModel = async (userBody: CreateUserBody) => {
+export const CreateOrUpdateUserModel = async (userBody: CreateUserBody) => {
    const client = await createConnection()
    try {
       const result = await client.query(
          `
-      INSERT INTO users (
-        username,
-        firstname,
-        lastname,
-        email,
-        mobile,
-        profile_picture,
-        bio
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-    `,
+         INSERT INTO users (
+            username,
+            firstname,
+            lastname,
+            email,
+            mobile,
+            profile_picture,
+            bio,
+            is_profile_completed,
+            is_email_verified,
+            is_mobile_verified
+         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+         ON CONFLICT (username)
+         DO UPDATE SET
+            firstname = EXCLUDED.firstname,
+            lastname = EXCLUDED.lastname,
+            email = EXCLUDED.email,
+            mobile = EXCLUDED.mobile,
+            profile_picture = EXCLUDED.profile_picture,
+            bio = EXCLUDED.bio,
+            is_profile_completed = EXCLUDED.is_profile_completed,
+            is_email_verified = EXCLUDED.is_email_verified,
+            is_mobile_verified = EXCLUDED.is_mobile_verified
+         RETURNING *
+         `,
          [
             userBody.username,
             userBody.firstName,
@@ -273,18 +288,20 @@ export const CreateDummyUsersModel = async (userBody: CreateUserBody) => {
             userBody.mobile,
             userBody.profilePicture,
             userBody.bio,
+            true, // is_profile_completed
+            true, // is_email_verified
+            true, // is_mobile_verified
          ],
       )
 
       return result.rows[0]
    } catch (error) {
-      throw new Error(`Error creating user: ${error}`)
+      throw new Error(`Error creating or updating user: ${error}`)
    } finally {
       await client.end()
    }
 }
 
-// get the users ids array
 export const getUsersIds = async () => {
    const client = await createConnection()
    try {
@@ -292,6 +309,21 @@ export const getUsersIds = async () => {
       return result.rows
    } catch (error) {
       throw new Error(`Error getting users ids: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
+
+export const getUsersbyUsernameModel = async (usernames: string[]) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         'SELECT * FROM users WHERE username = ANY($1)',
+         [usernames],
+      )
+      return result.rows
+   } catch (error) {
+      throw new Error(`Error getting users by username: ${error}`)
    } finally {
       await client.end()
    }
