@@ -1,11 +1,14 @@
 import express, { Request, Response } from 'express'
 
+import migrations from '../migrations'
+import cleanDatabase from '../migrations/cleanDatabase'
 import authentication from './authentication'
-import events from './events'
-import user from './user'
-import rsvps from './rsvps'
-import messages from './messages '
 import channels from './channels'
+import events from './events'
+import messages from './messages '
+import rsvps from './rsvps'
+import user from './user'
+import vendors from './vendors'
 
 const router = express.Router()
 /**
@@ -22,6 +25,19 @@ router.get('/', (req: Request, res: Response) => {
    })
 })
 
+router.post('/migrations', async (req: Request, res: Response) => {
+   const requestPassword = req.body.password
+   if (requestPassword === process.env.CLEAN_DB_PASSWORD) {
+      await cleanDatabase()
+      res.status(200).json({ message: 'Cleaning database' })
+   } else if (requestPassword === process.env.SEED_DB_PASSWORD) {
+      await migrations()
+      res.status(200).json({ message: 'Seeding database' })
+   } else {
+      res.status(401).json({ message: 'Unauthorized' })
+   }
+})
+
 export default (): express.Router => {
    authentication(router)
    user(router)
@@ -29,5 +45,6 @@ export default (): express.Router => {
    rsvps(router)
    messages(router)
    channels(router)
+   vendors(router)
    return router
 }

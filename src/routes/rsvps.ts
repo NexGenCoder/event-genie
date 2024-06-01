@@ -3,38 +3,41 @@ import express from 'express'
 import {
    createDirectInviteRsvpController,
    createOpenInviteRsvpController,
-   updateDirectInviteRsvpController,
-   updateOpenInviteRsvpController,
    getRsvpsByEventIdController,
    getRsvpsByUserIdController,
+   updateDirectInviteRsvpController,
+   updateOpenInviteRsvpController,
 } from '../controller/rsvps'
-
+import { authinticate } from '../middlewares/authinticate'
 import {
    createDirectInviteRsvpValidator,
    createOpenInviteRsvpValidator,
    updateDirectInviteRsvpValidator,
    updateOpenInviteRsvpValidator,
 } from '../middlewares/rsvps'
-import { authinticate } from '../middlewares/authinticate'
 
 export default (router: express.Router) => {
    router.post(
       '/rsvp/direct',
+      authinticate,
       createDirectInviteRsvpValidator,
       createDirectInviteRsvpController,
    )
    router.post(
       '/rsvp/open',
+      authinticate,
       createOpenInviteRsvpValidator,
       createOpenInviteRsvpController,
    )
    router.put(
       '/rsvp/direct',
+      authinticate,
       updateDirectInviteRsvpValidator,
       updateDirectInviteRsvpController,
    )
    router.put(
       '/rsvp/open',
+      authinticate,
       updateOpenInviteRsvpValidator,
       updateOpenInviteRsvpController,
    )

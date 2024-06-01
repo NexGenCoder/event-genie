@@ -9,6 +9,7 @@ const createChannelCategoriesTable = async () => {
             eventid UUID REFERENCES events(eventId),
             name VARCHAR(100) NOT NULL,
             description TEXT,
+            is_private BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (eventid) REFERENCES events(eventId)

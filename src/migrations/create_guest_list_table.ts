@@ -9,6 +9,7 @@ const createGuestsTable = async () => {
             eventid UUID,
             userid UUID,
             rsvpId UUID,
+            role VARCHAR(255) NOT NULL,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (eventid) REFERENCES events(eventid),

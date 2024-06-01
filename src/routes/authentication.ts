@@ -10,11 +10,11 @@ import {
    verifyOTPController,
 } from '../controller/authentication'
 import {
-   addUserDetailsValidator,
    sendOtpValidator,
    verifyOtpValidator,
 } from '../middlewares/authentication'
 import { authinticate } from '../middlewares/authinticate'
+import { updateUserProfileValidator } from '../middlewares/users'
 
 export default (router: express.Router) => {
    router.post('/auth/send-otp', sendOtpValidator, sendOTPController)
@@ -22,7 +22,7 @@ export default (router: express.Router) => {
    router.post(
       '/auth/add-user-details',
       authinticate,
-      addUserDetailsValidator,
+      updateUserProfileValidator,
       updateUserDetailsController,
    )
    router.get('/auth/self', authinticate, getSelfController)

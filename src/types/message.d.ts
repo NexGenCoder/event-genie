@@ -6,7 +6,10 @@ export type ICreateMessageBody = {
 
 export type IMessage = {
    messageid: string
-   channelid: string
+   channelid?: string
+   conversationid?: string
+   senderid?: string
+   receiverid?: string
    type: 'text' | 'image' | 'video'
    content: string
    sender: {
@@ -21,8 +24,9 @@ export type IMessage = {
 }
 
 export type IMessageInput = {
-   channelid: string
+   senderid?: string
+   receiverid?: string
+   channelid?: string
    type: 'text' | 'image' | 'video'
    content: string
-   senderid: string
 }

@@ -1,64 +1,94 @@
-# Whisperverse Backend
+# Event Genie Backend Setup
 
-Welcome to the Whisperverse Backend! This server-side component is responsible for managing user authentication, secrets posting, and other backend functionalities for the Whisperverse application.
+Event Genie is a platform that helps you find and create events that you'll love. Discover events tailored to your interests, connect with like-minded individuals, and create memorable experiences.
 
-## Overview
+## Tech Stack
 
-The Whisperverse backend is built using Express.js and Node.js, providing a robust and secure foundation for the Whisperverse application. It uses MongoDB as its database, JWT for authentication, and Passport for Google OAuth 2.0 integration.
+-  **Node.js**
+-  **Express**
+-  **TypeScript**
+-  **PostgreSQL**
+-  **Socket.io**
 
-## Cloning
+## Prerequisites
 
-To clone the backend repository, use the following command:
+Make sure you have the following installed:
 
-```bash
-git clone https://github.com/sahsisunny/form-flows.git
-cd form-flows/backend
-```
+-  [Node.js](https://nodejs.org/)
+-  [PostgreSQL](https://www.postgresql.org/)
 
-## Setup
+## Getting Started
 
-1. Install dependencies:
+1. **Clone the repository**
 
-```bash
-yarn
-```
+   ```bash
+   git clone https://github.com/NexGenCoder/event-genie-backend
+   cd event-genie-backend
+   ```
 
-2. Create a `.env` file in the `backend` directory with the following variables:
+2. **Install dependencies**
 
-```env
-PORT=3001
-MONGODB_URI="mongodb+srv://your_username:your_password@your_cluster.mongodb.net/your_database_name?retryWrites=true&w=majority"
-JWT_SECRET_KEY="your_jwt_secret_key"
-GOOGLE_CLIENT_ID="your_google_client_id"
-GOOGLE_CLIENT_SECRET="your_google_client_secret"
-GOOGLE_CALLBACK_URL="http://localhost:3001/auth/google/callback"
-CORS_ORIGIN="http://localhost:3000"
-SESSION_SECRET="your_session_secret_key"
-CLIENT_URL="http://localhost:3000"
-```
+   ```bash
+   yarn
+   ```
 
-Ensure to replace the placeholder values with your actual MongoDB connection string, JWT secret key, Google OAuth client ID, and client secret.
+3. **Set up environment variables**
 
-3. Run the backend server:
+   Create a `.env` file in the root directory of your project and add the following environment variables:
 
-```bash
-yarn start
-```
+   ```env
+   PORT=<port_number>(default: 3001)
 
-The backend server will start on `http://localhost:3001`.
+   DB_USER=<your_postgres_username>
+   DB_HOST=<your_postgres_host>(default: 127.0.0.1)
+   DB_NAME=<your_postgres_database>
+   DB_PASSWORD=<your_postgres_password>
+   DB_PORT=<your_postgres_port>(default: 5432)
 
-### Environment Variables
+   # GOOGLE AUTH
+   GOOGLE_CLIENT_ID=<your_google_client_id>
+   GOOGLE_CLIENT_SECRET=<your_google_client_secret>
+   GOOGLE_CALLBACK_URL=http://<your_backend_url>/auth/google/callback
 
--  **PORT**: The port on which the backend server will run.
--  **MONGODB_URI**: The connection string for your MongoDB database.
--  **JWT_SECRET_KEY**: A secret key for JWT token generation.
--  **GOOGLE_CLIENT_ID**: Your Google OAuth client ID.
--  **GOOGLE_CLIENT_SECRET**: Your Google OAuth client secret.
--  **GOOGLE_CALLBACK_URL**: The callback URL for Google OAuth.
--  **CORS_ORIGIN**: The origin URL for CORS.
--  **SESSION_SECRET**: A secret key for session generation.
--  **CLIENT_URL**: The URL for the frontend client.
+   CORS_ORIGIN=<your_frontend_url>
+   SESSION_SECRET=<your_session_secret>
+   JWT_SECRET_KEY=<your_jwt_secret_key>
+   CLIENT_URL=<your_frontend_url>
 
-Make sure to keep your `.env` file secure and do not share it publicly.
+   CLEAN_DB_PASSWORD=<your_clean_db_password>
+   SEED_DB_PASSWORD=<your_seed_db_password>
+   ```
 
-Now, the Whisperverse Backend is up and running, ready to support the Whisperverse application. For frontend setup and usage, please refer to the `client` folder's README.md.
+   **Note:** Ensure there are no spaces around the `=` sign in the `.env` file.
+
+4. **Run the PostgreSQL server**
+
+   Make sure your PostgreSQL server is running. You can use the following command to start PostgreSQL:
+
+   ```bash
+   sudo service postgresql start
+   ```
+
+5. **Create the database**
+
+   Connect to PostgreSQL and create the database:
+
+   ```sql
+   CREATE DATABASE <your_postgres_database_name>;
+   ```
+
+6. **Run database migrations**
+
+   Migration is run automatically when the server is started.
+
+7. **Start the server**
+
+   ```bash
+   yarn start
+   ```
+
+   The server should now be running on [http://localhost:3001](http://localhost:3001).
+
+## Contact
+
+If you have any questions or feedback, please reach out to us at @sahsisunny.
