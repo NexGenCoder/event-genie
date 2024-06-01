@@ -20,6 +20,15 @@ export interface IUserPayloadForToken {
    userid: number
 }
 
+export type IUpdateUser = {
+   firstname: string
+   lastname: string
+   profilePicture: string
+   username: string
+   mobile: string
+   bio: string
+}
+
 export interface IOtp {
    mobile: string
    country_code: string

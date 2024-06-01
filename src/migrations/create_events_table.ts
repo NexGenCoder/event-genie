@@ -14,6 +14,7 @@ const createEventTable = async () => {
             event_logo VARCHAR(300),
             location VARCHAR(100) NOT NULL,
             event_type VARCHAR(50) NOT NULL,
+            is_private BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
             userid UUID NOT NULL, -- Added NOT NULL here

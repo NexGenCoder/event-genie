@@ -1,5 +1,5 @@
 import express from 'express'
-import { IOtp, IUser } from 'types/user'
+import { IOtp, IUpdateUser, IUser } from 'types/user'
 
 import {
    addOtpModel,
@@ -7,8 +7,9 @@ import {
    verifyOtpModel,
 } from '../models/otp'
 import {
-   createUserIfNotExistsModel,
+   createNewUserModel,
    getUserByuseridModel,
+   updateUserMobileVerification,
    updateUserProfileModel,
 } from '../models/user'
 import passport from '../services/passport'
@@ -79,18 +80,14 @@ export const sendOTPController = async (
    }
 }
 
-/**
- * Verify OTP for Sign in or Sign up
- * @param req : mobile, otp
- * @param res : message
- * @returns
- */
 export const verifyOTPController = async (
    req: express.Request,
    res: express.Response,
 ) => {
    try {
       const { mobile, otp } = req.body
+      const userid = req.body.userid
+
       const otpData = await getOtpByMobileNumberModel(mobile as number, otp)
       if (!otpData) {
          return res.status(404).json({ message: 'OTP not found' })
@@ -105,7 +102,14 @@ export const verifyOTPController = async (
       }
 
       await verifyOtpModel(mobile as number, otp)
-      const userData = await createUserIfNotExistsModel(mobile as number)
+
+      let userData
+      if (userid) {
+         userData = await updateUserMobileVerification(userid, mobile)
+      } else {
+         userData = await createNewUserModel(mobile as number)
+      }
+
       const payload = {
          userid: userData.userid,
       }
@@ -124,7 +128,6 @@ export const verifyOTPController = async (
       return res.status(500).json({ message: 'Internal server error' })
    }
 }
-
 /**
  * Update user details
  * @param req : username, email, firstname, lastname, role, profile_picture, bio
@@ -137,23 +140,12 @@ export const updateUserDetailsController = async (
 ) => {
    try {
       const { userid } = res.locals
-      const { username, email, firstname, lastname, profile_picture, bio } =
-         req.body
-
-      await updateUserProfileModel(userid, {
-         username,
-         email,
-         firstname,
-         lastname,
-         profile_picture,
-         is_email_verified: false,
-         is_profile_completed: true,
-         bio,
+      const user: IUpdateUser = req.body
+      const updatedUser = await updateUserProfileModel(userid, user)
+      return res.status(200).json({
+         message: 'User updated successfully',
+         data: updatedUser,
       })
-
-      return res
-         .status(200)
-         .json({ message: 'User details updated successfully' })
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })
@@ -180,7 +172,7 @@ export const logoutController = async (
       }
 
       res.clearCookie('OG-AUTH')
-      return res.redirect('http://localhost:3000/')
+      return res.redirect(`${process.env.CLIENT_URL}/login`)
    } catch (err) {
       console.error(err)
       return res.status(500).json({ message: 'Internal server error' })
