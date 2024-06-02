@@ -15,7 +15,6 @@ export const insertDummyUsers = async () => {
 
       try {
          await CreateOrUpdateUserModel(userBody)
-         console.log(`User ${user.username} inserted successfully.`)
       } catch (error) {
          console.error(`Error inserting user ${user.username}:`, error)
       }

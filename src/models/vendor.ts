@@ -51,8 +51,6 @@ export const getVendorByOwnerIdModel = async (ownerId: string) => {
    }
 }
 
-// get all vendors
-
 export const getAllVendorsModel = async () => {
    const client = await createConnection()
    try {
@@ -60,6 +58,21 @@ export const getAllVendorsModel = async () => {
       return result.rows
    } catch (error) {
       throw new Error(`Error getting all vendors: ${error}`)
+   } finally {
+      await client.end()
+   }
+}
+
+export const getVendorPresenceModel = async (ownerId: string) => {
+   const client = await createConnection()
+   try {
+      const result = await client.query(
+         'SELECT EXISTS(SELECT 1 FROM vendors WHERE ownerid = $1)',
+         [ownerId],
+      )
+      return result.rows[0]
+   } catch (error) {
+      throw new Error(`Error getting vendor presence: ${error}`)
    } finally {
       await client.end()
    }

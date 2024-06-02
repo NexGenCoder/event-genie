@@ -25,7 +25,6 @@ export const insertVendorsDummyData = async () => {
 
       try {
          await createVendorModel(vendorBody)
-         console.log(`Vendor ${vendor.brand_name} inserted successfully.`)
       } catch (error) {
          console.error(`Error inserting vendor ${vendor.brand_name}:`, error)
       }

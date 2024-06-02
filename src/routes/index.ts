@@ -9,6 +9,7 @@ import messages from './messages '
 import rsvps from './rsvps'
 import user from './user'
 import vendors from './vendors'
+import services from './services'
 
 const router = express.Router()
 /**
@@ -46,5 +47,6 @@ export default (): express.Router => {
    messages(router)
    channels(router)
    vendors(router)
+   services(router)
    return router
 }
